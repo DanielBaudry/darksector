@@ -1,0 +1,9 @@
+body {
+    background-color: #1b1e21;
+    color: white;
+}
+
+.list-group-item {
+    background-color: #1b1e21;
+    border-color: white;
+}
