@@ -43,5 +43,7 @@ class Expedition:
             self.status = ExpeditionStatus.success
             self.sector = None
             return None
-        self.sector_level += 1
+        else:
+            self.sector_level += 1
+            self.sector = Sector(monster_repository=self.monster_repository)
         return self.resume()
