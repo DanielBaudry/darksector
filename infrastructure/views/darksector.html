@@ -14,8 +14,7 @@
             <span>{{ error }}</span>
         {% else %}
             <h1>Dark Sector</h1>
-            <span>{{ expedition.sector_level }}</span>
-            <span>{{ expedition.status.value }}</span>
+            <span>Level {{ expedition.sector_level }}</span>
             {% if expedition.status.value == 'SUCCESS' %}
                 <h2>Dark sector cleared</h2>
             {% else %}
@@ -36,8 +35,8 @@
             <div class="col-md-3">
                 <h1>{{ player.name }}</h1>
                 <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item">Life: {{ player.life }}</li>
-                    <li class="list-group-item">Energy: {{ player.energy }}</li>
+                    <li class="list-group-item">Life: {{ player.life }}/{{ player.max_life }}</li>
+                    <li class="list-group-item">Energy: {{ player.energy }}/{{ player.max_energy }}</li>
                     <li class="list-group-item">Damage: {{ player.damage }}</li>
                     <li class="list-group-item">Armor: {{ player.armor }}</li>
                     <li class="list-group-item">Level: {{ player.level }}</li>

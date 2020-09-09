@@ -55,5 +55,8 @@ class Expedition:
         sector_monster_number = len(self.sector.monsters)
         monster_index = 0 if sector_monster_number else randint(0, sector_monster_number)
         self.sector.monsters[monster_index].attack(self.player)
+
+        self.player.energy = self.player.max_energy
+
         if self.player.is_dead():
             self.status = ExpeditionStatus.failed

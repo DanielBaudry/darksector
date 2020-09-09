@@ -86,5 +86,6 @@ class ExpeditionSQLRepository(ExpeditionRepository):
         player_sql = PlayerSQL.query.get(expedition.player.identifier)
         player_sql.experience = expedition.player.experience
         player_sql.life = expedition.player.life
+        player_sql.energy = expedition.player.energy
         db.session.add(player_sql)
         db.session.commit()
