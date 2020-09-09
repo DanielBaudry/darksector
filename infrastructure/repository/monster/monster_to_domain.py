@@ -1,4 +1,4 @@
-from domain.monster import Monster
+from domain.monster.monster import Monster
 from infrastructure.repository.monster.in_memory_monsters import InMemoryMonsters
 
 

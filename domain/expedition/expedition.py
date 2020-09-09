@@ -1,9 +1,9 @@
 from enum import Enum
 from random import randint
 
-from domain.sector import Sector
-from domain.monster_repository import MonsterRepository
+from domain.monster.monster_repository import MonsterRepository
 from domain.player.player import Player
+from domain.sector import Sector
 
 
 class ExpeditionStatus(Enum):
@@ -39,6 +39,12 @@ class Expedition:
 
         sector_level_experience = self.sector.rewards()
         self.player.gain_experience(sector_level_experience)
+
+        # TODO: remove
+        self.player.energy = self.player.max_energy
+        self.player.armor = self.player.max_armor
+        self.player.damage = self.player.max_damage
+
         if self.sector_level == self.total_level:
             self.status = ExpeditionStatus.success
             self.sector = None

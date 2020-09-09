@@ -1,6 +1,6 @@
-from domain.expedition.expedition import Expedition, ExpeditionStatus
+from domain.expedition.expedition import Expedition
 from domain.expedition.expedition_repository import ExpeditionRepository
-from domain.monster_repository import MonsterRepository
+from domain.monster.monster_repository import MonsterRepository
 from domain.player.player_repository import PlayerRepository
 
 

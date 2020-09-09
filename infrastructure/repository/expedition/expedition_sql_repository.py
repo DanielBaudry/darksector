@@ -2,20 +2,21 @@ from typing import Optional
 
 from domain.expedition.expedition import Expedition, ExpeditionStatus
 from domain.expedition.expedition_repository import ExpeditionRepository
-from domain.monster_repository import MonsterRepository
+from domain.monster.monster_repository import MonsterRepository
 from domain.player.player import Player
 from domain.sector import Sector
 from domain.sector_monsters import SectorMonster
+from domain.skill.skill_repository import SkillRepository
 from infrastructure.repository.db import db
 from infrastructure.repository.expedition.expedition_sql import ExpeditionSQL
 from infrastructure.repository.player.player_sql import PlayerSQL
-
 from infrastructure.repository.sector_monster.sector_monster_sql import SectorMonsterSQL
 
 
 class ExpeditionSQLRepository(ExpeditionRepository):
-    def __init__(self, monster_repository: MonsterRepository):
+    def __init__(self, monster_repository: MonsterRepository, skill_repository: SkillRepository):
         self.monster_repository = monster_repository
+        self.skill_repository = skill_repository
 
     def get_current_expedition(self, player: Player) -> Optional[Expedition]:
         current_expedition_sql = ExpeditionSQL.query \
@@ -87,5 +88,7 @@ class ExpeditionSQLRepository(ExpeditionRepository):
         player_sql.experience = expedition.player.experience
         player_sql.life = expedition.player.life
         player_sql.energy = expedition.player.energy
+        player_sql.armor = expedition.player.armor
+        player_sql.damage = expedition.player.damage
         db.session.add(player_sql)
         db.session.commit()

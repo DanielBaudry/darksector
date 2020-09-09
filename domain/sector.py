@@ -1,7 +1,6 @@
-from random import randint
 from typing import List
 
-from domain.monster_repository import MonsterRepository
+from domain.monster.monster_repository import MonsterRepository
 from domain.sector_monsters import SectorMonster
 
 MAX_TYPE_OF_UNITS = 3

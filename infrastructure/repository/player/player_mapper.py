@@ -2,7 +2,7 @@ from domain.player.player import Player
 from infrastructure.repository.player.player_sql import PlayerSQL
 
 
-def to_domain(player_sql_entity: PlayerSQL) -> Player:
+def to_domain(player_sql_entity: PlayerSQL, skills) -> Player:
     return Player(
         identifier=player_sql_entity.id,
         name=player_sql_entity.name,
@@ -11,8 +11,11 @@ def to_domain(player_sql_entity: PlayerSQL) -> Player:
         energy=player_sql_entity.energy,
         max_energy=player_sql_entity.max_energy,
         damage=player_sql_entity.damage,
+        max_damage=player_sql_entity.max_damage,
         armor=player_sql_entity.armor,
+        max_armor=player_sql_entity.max_armor,
         experience=player_sql_entity.experience,
+        skills=skills,
     )
 
 
@@ -23,7 +26,9 @@ def to_sql_entity(user_id: int, player: Player) -> PlayerSQL:
         life=player.life,
         max_life=player.max_life,
         damage=player.damage,
+        max_damage=player.max_damage,
         armor=player.armor,
+        max_armor=player.max_armor,
         energy=player.energy,
         max_energy=player.max_energy,
     )

@@ -2,7 +2,7 @@ from abc import abstractmethod
 
 from sqlalchemy.testing.plugin.plugin_base import ABC
 
-from domain.monster import Monster
+from domain.monster.monster import Monster
 
 
 class MonsterRepository(ABC):

@@ -1,6 +1,6 @@
-from domain.expedition.expedition import Expedition, ExpeditionStatus
+from domain.expedition.expedition import Expedition
 from domain.expedition.expedition_repository import ExpeditionRepository
-from domain.monster_repository import MonsterRepository
+from domain.monster.monster_repository import MonsterRepository
 from domain.player.player_repository import PlayerRepository
 
 
@@ -16,5 +16,6 @@ class StartNewExpedition:
         expedition = Expedition(player=player, monster_repository=self.monster_repository)
         # TODO: remove
         player.life = player.max_life
+        player.energy = player.max_energy
         self.expedition_repository.save(expedition)
         return expedition

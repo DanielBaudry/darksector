@@ -1,6 +1,9 @@
-from domain.experience_levels import ExperienceLevel
+from typing import List
 
-BASIC_ATTACK_ENERGY_COST = 50
+from domain.experience_levels import ExperienceLevel
+from domain.skill.skill import Skill
+
+BASIC_ATTACK_ENERGY_COST = 10
 
 
 class Player:
@@ -10,9 +13,12 @@ class Player:
                  life: int = 200,
                  max_energy: int = 100,
                  energy: int = 100,
+                 max_damage: int = 10,
                  damage: int = 10,
+                 max_armor: int = 10,
                  armor: int = 10,
-                 experience: int = 0):
+                 experience: int = 0,
+                 skills: List[Skill] = []):
         self.identifier = identifier
         self.name = name
         self.max_life = max_life
@@ -20,8 +26,11 @@ class Player:
         self.max_energy = max_energy
         self.energy = energy
         self.damage = damage
+        self.max_damage = max_damage
         self.armor = armor
+        self.max_armor = max_armor
         self.experience = experience
+        self.skills = skills
 
     @property
     def level(self):
@@ -34,6 +43,14 @@ class Player:
         if self.energy >= BASIC_ATTACK_ENERGY_COST:
             sector_monster.receive_damage(self.damage)
             self.energy -= BASIC_ATTACK_ENERGY_COST
+
+    def use_skill(self, skill: Skill, sector_monster):
+        if self.energy >= skill.energy_cost:
+            sector_monster.receive_damage(skill.damage)
+            self.life = int(self.life * (1 + skill.life_bonus / 100))
+            self.armor = int(self.armor * (1 + skill.armor_bonus / 100))
+            self.damage = int(self.damage * (1 + skill.damage_bonus / 100))
+            self.energy -= skill.energy_cost
 
     def receive_damage(self, damage: int):
         self.life = int(max(0, self.life - damage * (1 - self.armor / 100)))

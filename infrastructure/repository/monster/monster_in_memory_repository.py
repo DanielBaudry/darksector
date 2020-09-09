@@ -1,8 +1,8 @@
 from enum import Enum
 from random import randint
 
-from domain.monster import Monster
-from domain.monster_repository import MonsterRepository
+from domain.monster.monster import Monster
+from domain.monster.monster_repository import MonsterRepository
 from infrastructure.repository.monster.in_memory_monsters import InMemoryMonsters
 from infrastructure.repository.monster.monster_to_domain import to_domain
 

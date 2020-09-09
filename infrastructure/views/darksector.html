@@ -24,7 +24,16 @@
                     <span>{{ sector_monster.monster.name }}: <i>{{ sector_monster.quantity }}/{{ sector_monster.initial_quantity }}</i></span>
                     <form action="/attack" method="post">
                         <input type="hidden" name="monster_name" value="{{ sector_monster.monster.name }}">
-                        <input class="btn btn-dark" type="submit" value="Attaquer">
+                        <input class="btn btn-dark" type="submit" value="Attack">
+                    </form>
+                    <form action="/skill" method="post">
+                        <input type="hidden" name="monster_name" value="{{ sector_monster.monster.name }}">
+                        <select class="custom-select col-md-3" name="skill_name">
+                            {% for skill in player.skills %}
+                            <option value="{{ skill.name }}">{{ skill.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <input class="btn btn-dark" type="submit" value="Use skill">
                     </form>
                 </li>
                 {% endfor %}
@@ -37,8 +46,8 @@
                 <ul class="list-group list-group-horizontal">
                     <li class="list-group-item">Life: {{ player.life }}/{{ player.max_life }}</li>
                     <li class="list-group-item">Energy: {{ player.energy }}/{{ player.max_energy }}</li>
-                    <li class="list-group-item">Damage: {{ player.damage }}</li>
-                    <li class="list-group-item">Armor: {{ player.armor }}</li>
+                    <li class="list-group-item">Damage: {{ player.damage }}/{{ player.max_damage }}</li>
+                    <li class="list-group-item">Armor: {{ player.armor }}/{{ player.max_armor }}</li>
                     <li class="list-group-item">Level: {{ player.level }}</li>
                     <li class="list-group-item">Experience: {{ player.experience }}</li>
                 </ul>
