@@ -1,3 +1,5 @@
+from typing import Optional
+
 from domain.expedition.expedition import Expedition, ExpeditionStatus
 from domain.expedition.expedition_repository import ExpeditionRepository
 from domain.monster_repository import MonsterRepository
@@ -15,16 +17,14 @@ class ExpeditionSQLRepository(ExpeditionRepository):
     def __init__(self, monster_repository: MonsterRepository):
         self.monster_repository = monster_repository
 
-    def get_current_expedition(self, player: Player) -> Expedition:
+    def get_current_expedition(self, player: Player) -> Optional[Expedition]:
         current_expedition_sql = ExpeditionSQL.query \
             .filter(ExpeditionSQL.playerId == player.identifier) \
             .filter(ExpeditionSQL.status == ExpeditionStatus.in_progress) \
             .first()
 
         if not current_expedition_sql:
-            current_expedition_sql = ExpeditionSQL(player_id=player.identifier)
-            db.session.add(current_expedition_sql)
-            db.session.commit()
+            return None
 
         current_sector = None
         if current_expedition_sql.status == ExpeditionStatus.in_progress:

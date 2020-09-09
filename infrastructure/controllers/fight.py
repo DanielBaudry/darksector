@@ -9,7 +9,7 @@ from infrastructure.dependencies_injections import player_attack_monster
 def attack_monster():
     monster_name = request.form['monster_name']
     player_attack_monster.execute(user_id=current_user.id, monster_name=monster_name)
-    return redirect(url_for('enter_darksector'))
+    return redirect(url_for('get_darksector'))
 
 
 @app.route('/turn', methods=['POST'])

@@ -11,6 +11,10 @@ class CompleteSectorLevel:
     def execute(self, user_id: int) -> Expedition:
         player = self.player_repository.get_player_by_user_id(user_id=user_id)
         expedition = self.expedition_repository.get_current_expedition(player=player)
+        if not expedition:
+            return None
+        print(expedition.__dict__)
         expedition.complete_level()
+        print(expedition.__dict__)
         self.expedition_repository.save(expedition)
         return expedition

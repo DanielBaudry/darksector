@@ -4,7 +4,7 @@ from domain.monster_repository import MonsterRepository
 from domain.player.player_repository import PlayerRepository
 
 
-class GetCurrentExpedition:
+class StartNewExpedition:
     def __init__(self, player_repository: PlayerRepository, expedition_repository: ExpeditionRepository,
                  monster_repository: MonsterRepository):
         self.player_repository = player_repository
@@ -13,5 +13,6 @@ class GetCurrentExpedition:
 
     def execute(self, user_id: int) -> Expedition:
         player = self.player_repository.get_player_by_user_id(user_id=user_id)
-        expedition = self.expedition_repository.get_current_expedition(player=player)
+        expedition = Expedition(player=player, monster_repository=self.monster_repository)
+        self.expedition_repository.save(expedition)
         return expedition
