@@ -9,7 +9,7 @@ class SectorMonster:
                  initial_quantity: int = None, quantity: int = None):
         self.monster_repository = monster_repository
         self.monster = monster if monster else self.monster_repository.get_random_monster()
-        self.initial_quantity = initial_quantity if initial_quantity else randint(1, 100)
+        self.initial_quantity = initial_quantity if initial_quantity else randint(1, 10)
         self.quantity = quantity if quantity is not None else self.initial_quantity
 
     def receive_damage(self, damage: int):

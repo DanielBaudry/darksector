@@ -14,5 +14,7 @@ class StartNewExpedition:
     def execute(self, user_id: int) -> Expedition:
         player = self.player_repository.get_player_by_user_id(user_id=user_id)
         expedition = Expedition(player=player, monster_repository=self.monster_repository)
+        # TODO: remove
+        player.life = 200
         self.expedition_repository.save(expedition)
         return expedition

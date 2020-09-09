@@ -26,21 +26,19 @@ class ExpeditionSQLRepository(ExpeditionRepository):
         if not current_expedition_sql:
             return None
 
-        current_sector = None
-        if current_expedition_sql.status == ExpeditionStatus.in_progress:
-            sector_monsters_sql = SectorMonsterSQL.query.filter(
-                SectorMonsterSQL.expeditionId == current_expedition_sql.id).all()
-            monsters = []
-            for sector_monster_sql in sector_monsters_sql:
-                monsters.append(
-                    SectorMonster(
-                        monster_repository=self.monster_repository,
-                        monster=self.monster_repository.get_monster(sector_monster_sql.monster_name),
-                        initial_quantity=sector_monster_sql.initial_quantity,
-                        quantity=sector_monster_sql.quantity,
-                    )
+        sector_monsters_sql = SectorMonsterSQL.query.filter(
+            SectorMonsterSQL.expeditionId == current_expedition_sql.id).all()
+        monsters = []
+        for sector_monster_sql in sector_monsters_sql:
+            monsters.append(
+                SectorMonster(
+                    monster_repository=self.monster_repository,
+                    monster=self.monster_repository.get_monster(sector_monster_sql.monster_name),
+                    initial_quantity=sector_monster_sql.initial_quantity,
+                    quantity=sector_monster_sql.quantity,
                 )
-            current_sector = Sector(monster_repository=self.monster_repository, monsters=monsters)
+            )
+        current_sector = Sector(monster_repository=self.monster_repository, monsters=monsters)
 
         return Expedition(
             identifier=current_expedition_sql.id,
@@ -85,7 +83,8 @@ class ExpeditionSQLRepository(ExpeditionRepository):
                 db.session.add(sector_monster_sql)
             db.session.commit()
 
-            player_sql = PlayerSQL.query.get(expedition.player.identifier)
-            player_sql.experience = expedition.player.experience
-            db.session.add(player_sql)
-            db.session.commit()
+        player_sql = PlayerSQL.query.get(expedition.player.identifier)
+        player_sql.experience = expedition.player.experience
+        player_sql.life = expedition.player.life
+        db.session.add(player_sql)
+        db.session.commit()

@@ -12,15 +12,13 @@ class Sector:
                  monsters: List = []):
         self.monster_repository = monster_repository
         self.monsters = monsters if monsters else self.generate_monsters()
-        self.experience_reward = sum([monster.monster.experience_gain * monster.quantity for monster in self.monsters])
+        self.experience_reward = sum(
+            [monster.monster.experience_gain * monster.initial_quantity for monster in self.monsters])
 
     def generate_monsters(self) -> List[SectorMonster]:
-        monsters = []
-        monsters_quantity = randint(1, MAX_TYPE_OF_UNITS)
-        for index in range(monsters_quantity):
-            monsters.append(
-                SectorMonster(monster_repository=self.monster_repository)
-            )
+        monsters = [SectorMonster(monster_repository=self.monster_repository)]
+        # monsters_quantity = randint(1, MAX_TYPE_OF_UNITS)
+        # for index in range(monsters_quantity):
         return monsters
 
     def rewards(self) -> int:
@@ -28,3 +26,6 @@ class Sector:
 
     def get_sector_monster_by_name(self, monster_name: str) -> SectorMonster:
         return [sector_monster for sector_monster in self.monsters if sector_monster.monster.name == monster_name][0]
+
+    def is_cleared(self) -> bool:
+        return sum([sector_monster.quantity for sector_monster in self.monsters]) == 0

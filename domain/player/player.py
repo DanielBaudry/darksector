@@ -28,3 +28,6 @@ class Player:
 
     def gain_experience(self, experience: int):
         self.experience += experience
+
+    def is_dead(self) -> bool:
+        return self.life == 0
