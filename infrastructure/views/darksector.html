@@ -4,74 +4,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/static/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="/static/main.css" rel="stylesheet" media="screen">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="container">
-        {% if error %}
-            <span>{{ error }}</span>
-        {% else %}
-            <h1>Dark Sector</h1>
-            <span>Level {{ expedition.sector_level }}</span>
-            {% if expedition.status.value == 'SUCCESS' %}
-                <h2>Dark sector cleared</h2>
-            {% else %}
-                <ul class="list-group list-group-flush">
-                {% for sector_monster in sector.monsters %}
-                <li class="list-group-item">
-                    <span>{{ sector_monster.monster.name }}: <i>{{ sector_monster.quantity }}/{{ sector_monster.initial_quantity }}</i></span>
-                    <form action="/attack" method="post">
-                        <input type="hidden" name="monster_name" value="{{ sector_monster.monster.name }}">
-                        <input class="btn btn-dark" type="submit" value="Attack">
-                    </form>
-                    <form action="/skill" method="post">
-                        <input type="hidden" name="monster_name" value="{{ sector_monster.monster.name }}">
-                        <select class="custom-select col-md-3" name="skill_name">
-                            {% for skill in player.skills %}
-                            {% if skill.damage > 0 %}
-                            <option value="{{ skill.name }}">{{ skill.name }}</option>
-                            {% endif %}
-                            {% endfor %}
-                        </select>
-                        <input class="btn btn-dark" type="submit" value="Use skill">
-                    </form>
-                </li>
-                {% endfor %}
-                </ul>
-                <a class="btn btn-dark" href="/turn">End turn</a>
-                <a class="btn btn-dark" href="/darksector/next">Complete</a>
-            {% endif %}
-            <h1>{{ player.name }}</h1>
+<div class="container">
+    {% if error %}
+    <span>{{ error }}</span>
+    {% else %}
+    <h1>Dark Sector</h1>
+    <span>Level {{ expedition.sector_level }}</span>
+    {% if expedition.status.value == 'SUCCESS' %}
+    <h2>Dark sector cleared</h2>
+    {% else %}
+    <ul class="list-group list-group-flush">
+        {% for sector_monster in sector.monsters %}
+        <li class="list-group-item">
+            <span>{{ sector_monster.monster.name }}: <i>{{ sector_monster.quantity }}/{{ sector_monster.initial_quantity }}</i></span>
+            <form action="/attack" method="post">
+                <input type="hidden" name="monster_name" value="{{ sector_monster.monster.name }}">
+                <input class="btn btn-dark" type="submit" value="Attack">
+            </form>
+            <form action="/skill" method="post">
+                <input type="hidden" name="monster_name" value="{{ sector_monster.monster.name }}">
+                <select class="custom-select col-md-3" name="skill_name">
+                    {% for skill in player.skills %}
+                    {% if skill.damage > 0 %}
+                    <option value="{{ skill.name }}">{{ skill.name }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+                <input class="btn btn-dark" type="submit" value="Use skill">
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    <a class="btn btn-dark" href="/turn">End turn</a>
+    <a class="btn btn-dark" href="/darksector/next">Complete</a>
+    {% endif %}
+    <h1>{{ player.name }}</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item">Life: {{ player.life }}/{{ player.max_life }}</li>
+                <li class="list-group-item">Energy: {{ player.energy }}/{{ player.max_energy }}</li>
+                <li class="list-group-item">Damage: {{ player.damage }}/{{ player.max_damage }}</li>
+                <li class="list-group-item">Armor: {{ player.armor }}/{{ player.max_armor }}</li>
+            </ul>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item">Level: {{ player.level }}</li>
+                <li class="list-group-item">Experience: {{ player.experience }}</li>
+            </ul>
+            <a class="btn btn-dark" href="/player">Player</a>
+        </div>
+        <div class="col-md-6">
             <div class="row">
-                <div class="col-md-6">
-                    <ul class="list-group list-group-horizontal">
-                        <li class="list-group-item">Life: {{ player.life }}/{{ player.max_life }}</li>
-                        <li class="list-group-item">Energy: {{ player.energy }}/{{ player.max_energy }}</li>
-                        <li class="list-group-item">Damage: {{ player.damage }}/{{ player.max_damage }}</li>
-                        <li class="list-group-item">Armor: {{ player.armor }}/{{ player.max_armor }}</li>
-                    </ul>
-                    <ul class="list-group list-group-horizontal">
-                        <li class="list-group-item">Level: {{ player.level }}</li>
-                        <li class="list-group-item">Experience: {{ player.experience }}</li>
-                    </ul>
-                    <a class="btn btn-dark" href="/player">Player</a>
-                </div>
-                <div class="col-md-6">
+                {% for skill in player.skills %}
+                {% if skill.damage == 0 %}
+                <div class="col-md">
+                    <span>{{ skill.name }}</span>
                     <form action="/skill" method="post">
-                        <select class="custom-select col-md-3" name="skill_name">
-                            {% for skill in player.skills %}
-                            {% if skill.damage == 0 %}
-                            <option value="{{ skill.name }}">{{ skill.name }}</option>
-                            {% endif %}
-                            {% endfor %}
-                        </select>
-                        <input class="btn btn-dark" type="submit" value="Use skill">
+                        <input type="hidden" name="skill_name" value="{{ skill.name }}">
+                        <input type="image" src="/static/{{ skill.identifier }}.jpeg" width="120" height="120">
                     </form>
                 </div>
+                {% endif %}
+                {% endfor %}
             </div>
-        {% endif %}
+        </div>
     </div>
+    {% endif %}
+</div>
 </body>
 </html>
