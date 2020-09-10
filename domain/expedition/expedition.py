@@ -18,7 +18,8 @@ class Expedition:
                  player: Player,
                  sector_monsters_generator: SectorMonstersGenerator,
                  identifier: int = None,
-                 sector: Sector = None, sector_level: int = 1,
+                 sector: Sector = None,
+                 sector_level: int = 1,
                  status: ExpeditionStatus = ExpeditionStatus.in_progress):
         self.identifier = identifier
         self.sector_monsters_generator = sector_monsters_generator

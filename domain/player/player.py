@@ -40,7 +40,7 @@ class Player:
         return ExperienceLevel.level_10.value['level']
 
     def basic_attack(self, sector_monster) -> None:
-        if self.energy >= BASIC_ATTACK_ENERGY_COST:
+        if self.energy >= BASIC_ATTACK_ENERGY_COST and sector_monster.quantity > 0:
             sector_monster.receive_damage(self.damage)
             self.energy -= BASIC_ATTACK_ENERGY_COST
 

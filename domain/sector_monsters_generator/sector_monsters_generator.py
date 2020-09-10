@@ -2,7 +2,7 @@ from random import randint
 from typing import List
 
 from domain.monster.monster import Monster
-from domain.sector_monsters import SectorMonster
+from domain.sector_monsters.sector_monsters import SectorMonster
 
 
 class SectorMonstersGenerator:

@@ -1,6 +1,6 @@
 from typing import List
 
-from domain.sector_monsters import SectorMonster
+from domain.sector_monsters.sector_monsters import SectorMonster
 from domain.sector_monsters_generator.sector_monsters_generator import SectorMonstersGenerator
 
 MAX_TYPE_OF_UNITS = 3

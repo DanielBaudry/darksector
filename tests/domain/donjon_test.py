@@ -1,6 +1,6 @@
 from domain.sector import DarkSector, Sector
 from domain.player import Player
-from domain.sector_monsters import SectorMonster
+from domain.sector_monsters.sector_monsters import SectorMonster
 from infrastructure.repository.monster.monster_in_memory_repository import MonsterInMemoryRepository
 
 
