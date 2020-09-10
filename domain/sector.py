@@ -19,7 +19,8 @@ class Sector:
         return self.experience_reward
 
     def get_sector_monster_by_name(self, monster_name: str) -> SectorMonster:
-        return [sector_monster for sector_monster in self.monsters if sector_monster.monster.name == monster_name][0]
+        return next(iter([sector_monster for sector_monster in self.monsters
+                          if sector_monster.monster.name == monster_name]), None)
 
     def is_cleared(self) -> bool:
         return sum([sector_monster.quantity for sector_monster in self.monsters]) == 0

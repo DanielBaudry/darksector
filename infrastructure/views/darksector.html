@@ -30,7 +30,9 @@
                         <input type="hidden" name="monster_name" value="{{ sector_monster.monster.name }}">
                         <select class="custom-select col-md-3" name="skill_name">
                             {% for skill in player.skills %}
+                            {% if skill.damage > 0 %}
                             <option value="{{ skill.name }}">{{ skill.name }}</option>
+                            {% endif %}
                             {% endfor %}
                         </select>
                         <input class="btn btn-dark" type="submit" value="Use skill">
@@ -41,17 +43,33 @@
                 <a class="btn btn-dark" href="/turn">End turn</a>
                 <a class="btn btn-dark" href="/darksector/next">Complete</a>
             {% endif %}
-            <div class="col-md-3">
-                <h1>{{ player.name }}</h1>
-                <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item">Life: {{ player.life }}/{{ player.max_life }}</li>
-                    <li class="list-group-item">Energy: {{ player.energy }}/{{ player.max_energy }}</li>
-                    <li class="list-group-item">Damage: {{ player.damage }}/{{ player.max_damage }}</li>
-                    <li class="list-group-item">Armor: {{ player.armor }}/{{ player.max_armor }}</li>
-                    <li class="list-group-item">Level: {{ player.level }}</li>
-                    <li class="list-group-item">Experience: {{ player.experience }}</li>
-                </ul>
-                <a class="btn btn-dark" href="/player">Player</a>
+            <h1>{{ player.name }}</h1>
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="list-group list-group-horizontal">
+                        <li class="list-group-item">Life: {{ player.life }}/{{ player.max_life }}</li>
+                        <li class="list-group-item">Energy: {{ player.energy }}/{{ player.max_energy }}</li>
+                        <li class="list-group-item">Damage: {{ player.damage }}/{{ player.max_damage }}</li>
+                        <li class="list-group-item">Armor: {{ player.armor }}/{{ player.max_armor }}</li>
+                    </ul>
+                    <ul class="list-group list-group-horizontal">
+                        <li class="list-group-item">Level: {{ player.level }}</li>
+                        <li class="list-group-item">Experience: {{ player.experience }}</li>
+                    </ul>
+                    <a class="btn btn-dark" href="/player">Player</a>
+                </div>
+                <div class="col-md-6">
+                    <form action="/skill" method="post">
+                        <select class="custom-select col-md-3" name="skill_name">
+                            {% for skill in player.skills %}
+                            {% if skill.damage == 0 %}
+                            <option value="{{ skill.name }}">{{ skill.name }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                        <input class="btn btn-dark" type="submit" value="Use skill">
+                    </form>
+                </div>
             </div>
         {% endif %}
     </div>

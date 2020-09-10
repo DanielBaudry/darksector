@@ -46,7 +46,8 @@ class Player:
 
     def use_skill(self, skill: Skill, sector_monster):
         if self.energy >= skill.energy_cost:
-            sector_monster.receive_damage(skill.damage)
+            if sector_monster:
+                sector_monster.receive_damage(skill.damage)
             self.life = int(self.life * (1 + skill.life_bonus / 100))
             self.armor = int(self.armor * (1 + skill.armor_bonus / 100))
             self.damage = int(self.damage * (1 + skill.damage_bonus / 100))

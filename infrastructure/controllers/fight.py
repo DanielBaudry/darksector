@@ -15,8 +15,8 @@ def attack_monster():
 @app.route('/skill', methods=['POST'])
 @login_required
 def use_skill():
-    skill_name = request.form['skill_name']
-    monster_name = request.form['monster_name']
+    skill_name = request.form.get('skill_name')
+    monster_name = request.form.get('monster_name')
     use_skill_on_monster.execute(user_id=current_user.id, monster_name=monster_name, skill_name=skill_name)
     return redirect(url_for('get_darksector'))
 

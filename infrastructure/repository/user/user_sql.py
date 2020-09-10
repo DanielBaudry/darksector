@@ -1,3 +1,4 @@
+import bcrypt
 from flask_login import UserMixin
 from sqlalchemy import Column, String, Binary, Integer
 
@@ -12,3 +13,7 @@ class UserSQL(Model, UserMixin):
     username = Column(String(20), nullable=False, unique=True)
 
     password = Column(Binary(60), nullable=False)
+
+    def __init__(self, username: str, clear_password):
+        self.username = username
+        self.password = bcrypt.hashpw(clear_password.encode('utf-8'), bcrypt.gensalt())

@@ -34,9 +34,10 @@ def login():
 def signup():
     error = None
     if request.method == 'POST':
-        user = UserSQL()
-        user.username = request.form['username']
-        user.password = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt())
+        user = UserSQL(
+            username=request.form['username'],
+            clear_password=request.form['password'],
+        )
         UserSQLRepository().save(user)
         login_user(user)
         return redirect(url_for('player_details'))

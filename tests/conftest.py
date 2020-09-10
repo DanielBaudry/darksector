@@ -8,22 +8,22 @@ from flask_login import LoginManager, login_user
 from requests.auth import _basic_auth_str
 from sqlalchemy import orm
 
-from infrastructure.repository.models import HiveUnitModel
-from infrastructure.repository.models import Planet
-from infrastructure.repository.models import Unit
-from infrastructure.repository.models import User
 from infrastructure.repository.db import db
+from infrastructure.repository.expedition.expedition_sql import ExpeditionSQL
+from infrastructure.repository.player.player_sql import PlayerSQL
+from infrastructure.repository.sector_monster.sector_monster_sql import SectorMonsterSQL
+from infrastructure.repository.user.user_sql import UserSQL
 
 
-def find_user_by_email(user_id: int) -> Optional[User]:
-    return db.session.query(User).get(user_id)
+def find_user_by_email(user_id: int) -> Optional[UserSQL]:
+    return db.session.query(UserSQL).get(user_id)
 
 
 @pytest.fixture(scope='session')
 def app():
     app = Flask(__name__, template_folder='../templates')
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/hive_test.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/darksector_test.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = '@##&6cweafhv3426445'
     app.config['REMEMBER_COOKIE_HTTPONLY'] = False
@@ -53,10 +53,10 @@ def app():
 
 
 def truncate_all_tables():
-    db.session.query(Unit).delete()
-    db.session.query(HiveUnitModel).delete()
-    db.session.query(Planet).delete()
-    db.session.query(User).delete()
+    db.session.query(PlayerSQL).delete()
+    db.session.query(SectorMonsterSQL).delete()
+    db.session.query(ExpeditionSQL).delete()
+    db.session.query(UserSQL).delete()
     db.session.flush()
 
 

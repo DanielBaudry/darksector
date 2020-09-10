@@ -19,7 +19,9 @@ class StartNewExpedition:
         )
         expedition = Expedition(player=player, sector_monsters_generator=sector_monsters_generator)
         # TODO: remove
+        # =================================
         player.life = player.max_life
         player.energy = player.max_energy
+        # =================================
         self.expedition_repository.save(expedition)
         return expedition
