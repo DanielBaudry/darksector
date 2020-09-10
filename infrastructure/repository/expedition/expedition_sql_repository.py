@@ -6,6 +6,7 @@ from domain.monster.monster_repository import MonsterRepository
 from domain.player.player import Player
 from domain.sector import Sector
 from domain.sector_monsters import SectorMonster
+from domain.sector_monsters_generator.sector_monsters_generator import SectorMonstersGenerator
 from domain.skill.skill_repository import SkillRepository
 from infrastructure.repository.db import db
 from infrastructure.repository.expedition.expedition_sql import ExpeditionSQL
@@ -27,24 +28,29 @@ class ExpeditionSQLRepository(ExpeditionRepository):
         if not current_expedition_sql:
             return None
 
-        sector_monsters_sql = SectorMonsterSQL.query.filter(
-            SectorMonsterSQL.expeditionId == current_expedition_sql.id).all()
+        sector_monsters_sql = SectorMonsterSQL.query \
+            .filter(SectorMonsterSQL.expeditionId == current_expedition_sql.id) \
+            .all()
+
+        sector_monsters_generator = SectorMonstersGenerator(
+            self.monster_repository.get_all_monsters()
+        )
         monsters = []
         for sector_monster_sql in sector_monsters_sql:
             monsters.append(
                 SectorMonster(
-                    monster_repository=self.monster_repository,
                     monster=self.monster_repository.get_monster(sector_monster_sql.monster_name),
                     initial_quantity=sector_monster_sql.initial_quantity,
                     quantity=sector_monster_sql.quantity,
                 )
             )
-        current_sector = Sector(monster_repository=self.monster_repository, monsters=monsters)
+        current_sector = Sector(sector_monsters_generator=sector_monsters_generator,
+                                monsters=monsters)
 
         return Expedition(
             identifier=current_expedition_sql.id,
             player=player,
-            monster_repository=self.monster_repository,
+            sector_monsters_generator=sector_monsters_generator,
             sector_level=current_expedition_sql.sector_level,
             sector=current_sector,
             status=current_expedition_sql.status,

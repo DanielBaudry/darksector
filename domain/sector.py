@@ -1,24 +1,19 @@
 from typing import List
 
-from domain.monster.monster_repository import MonsterRepository
 from domain.sector_monsters import SectorMonster
+from domain.sector_monsters_generator.sector_monsters_generator import SectorMonstersGenerator
 
 MAX_TYPE_OF_UNITS = 3
 
 
 class Sector:
-    def __init__(self, monster_repository: MonsterRepository,
+    def __init__(self,
+                 sector_monsters_generator: SectorMonstersGenerator,
                  monsters: List = []):
-        self.monster_repository = monster_repository
-        self.monsters = monsters if monsters else self.generate_monsters()
+        self.sector_monsters_generator = sector_monsters_generator
+        self.monsters = monsters if monsters else self.sector_monsters_generator.generate_sector_monsters()
         self.experience_reward = sum(
             [monster.monster.experience_gain * monster.initial_quantity for monster in self.monsters])
-
-    def generate_monsters(self) -> List[SectorMonster]:
-        monsters = [SectorMonster(monster_repository=self.monster_repository)]
-        # monsters_quantity = randint(1, MAX_TYPE_OF_UNITS)
-        # for index in range(monsters_quantity):
-        return monsters
 
     def rewards(self) -> int:
         return self.experience_reward

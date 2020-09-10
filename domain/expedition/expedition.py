@@ -4,6 +4,7 @@ from random import randint
 from domain.monster.monster_repository import MonsterRepository
 from domain.player.player import Player
 from domain.sector import Sector
+from domain.sector_monsters_generator.sector_monsters_generator import SectorMonstersGenerator
 
 
 class ExpeditionStatus(Enum):
@@ -15,18 +16,18 @@ class ExpeditionStatus(Enum):
 class Expedition:
     def __init__(self,
                  player: Player,
-                 monster_repository: MonsterRepository,
+                 sector_monsters_generator: SectorMonstersGenerator,
                  identifier: int = None,
                  sector: Sector = None, sector_level: int = 1,
                  status: ExpeditionStatus = ExpeditionStatus.in_progress):
         self.identifier = identifier
-        self.monster_repository = monster_repository
+        self.sector_monsters_generator = sector_monsters_generator
         self.player = player
         self.status = status
         if self.status != ExpeditionStatus.in_progress:
             self.sector = None
         else:
-            self.sector = sector if sector else Sector(monster_repository=self.monster_repository)
+            self.sector = sector if sector else Sector(sector_monsters_generator=self.sector_monsters_generator)
         self.sector_level = sector_level
         self.total_level = 3
 
@@ -51,7 +52,7 @@ class Expedition:
             return
         else:
             self.sector_level += 1
-            self.sector = Sector(monster_repository=self.monster_repository)
+            self.sector = Sector(sector_monsters_generator=self.sector_monsters_generator)
         return
 
     def end_turn(self):

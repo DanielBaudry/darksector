@@ -1,14 +1,12 @@
 from random import randint
 
 from domain.monster.monster import Monster
-from domain.monster.monster_repository import MonsterRepository
 
 
 class SectorMonster:
-    def __init__(self, monster_repository: MonsterRepository, monster: Monster = None,
+    def __init__(self, monster: Monster,
                  initial_quantity: int = None, quantity: int = None):
-        self.monster_repository = monster_repository
-        self.monster = monster if monster else self.monster_repository.get_random_monster()
+        self.monster = monster
         self.initial_quantity = initial_quantity if initial_quantity else randint(1, 10)
         self.quantity = quantity if quantity is not None else self.initial_quantity
 
