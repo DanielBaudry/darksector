@@ -4,7 +4,7 @@ from domain.expedition.expedition import Expedition, ExpeditionStatus
 from domain.expedition.expedition_repository import ExpeditionRepository
 from domain.monster.monster_repository import MonsterRepository
 from domain.player.player import Player
-from domain.sector import Sector
+from domain.expedition.sector import Sector
 from domain.sector_monsters.sector_monsters import SectorMonster
 from domain.sector_monsters_generator.sector_monsters_generator import SectorMonstersGenerator
 from domain.skill.skill_repository import SkillRepository

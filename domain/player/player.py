@@ -1,6 +1,6 @@
 from typing import List
 
-from domain.experience_levels import ExperienceLevel
+from domain.player.experience_levels import ExperienceLevel
 from domain.skill.skill import Skill
 
 BASIC_ATTACK_ENERGY_COST = 10

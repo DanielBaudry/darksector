@@ -1,6 +1,6 @@
 from domain.expedition.expedition import Expedition, ExpeditionStatus
 from domain.monster.monster import Monster
-from domain.sector import Sector
+from domain.expedition.sector import Sector
 from domain.sector_monsters.sector_monsters import SectorMonster
 from domain.sector_monsters_generator.sector_monsters_generator import SectorMonstersGenerator
 from infrastructure.repository.db import db

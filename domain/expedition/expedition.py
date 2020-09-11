@@ -1,9 +1,8 @@
 from enum import Enum
 from random import randint
 
-from domain.monster.monster_repository import MonsterRepository
 from domain.player.player import Player
-from domain.sector import Sector
+from domain.expedition.sector import Sector
 from domain.sector_monsters_generator.sector_monsters_generator import SectorMonstersGenerator
 
 
