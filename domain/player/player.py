@@ -65,8 +65,6 @@ class Player:
     def level_up(self):
         self.max_life = int(self.max_life * 1.10)
         self.max_damage = int(self.max_damage * 1.10)
-        self.max_armor = int(self.max_armor * 1.10)
-        self.max_energy = int(self.max_energy * 1.10)
 
     def is_dead(self) -> bool:
         return self.life == 0
