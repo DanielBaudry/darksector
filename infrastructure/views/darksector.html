@@ -23,6 +23,13 @@
     <span>Level {{ expedition.sector_level }}</span>
     {% if expedition.status.value == 'SUCCESS' %}
     <h2>Dark sector cleared</h2>
+        <div>
+            Credits founded: <strong>{{ expedition.credit_rewards }}</strong>
+            {% if expedition.gear_reward %}
+            <br >
+            Gears founded: <strong>{{ expedition.gear_reward[0].name }}</strong>
+            {% endif %}
+        </div>
     {% else %}
     <ul class="list-group list-group-flush">
         {% for sector_monster in sector.monsters %}

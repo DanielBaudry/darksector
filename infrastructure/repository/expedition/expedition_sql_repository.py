@@ -2,6 +2,8 @@ from typing import Optional
 
 from domain.expedition.expedition import Expedition, ExpeditionStatus
 from domain.expedition.expedition_repository import ExpeditionRepository
+from domain.expedition_rewards_generator.expedition_rewards_generator import ExpeditionRewardsGenerator
+from domain.gear.gear_repository import GearRepository
 from domain.monster.monster_repository import MonsterRepository
 from domain.player.player import Player
 from domain.expedition.sector import Sector
@@ -15,9 +17,11 @@ from infrastructure.repository.sector_monster.sector_monster_sql import SectorMo
 
 
 class ExpeditionSQLRepository(ExpeditionRepository):
-    def __init__(self, monster_repository: MonsterRepository, skill_repository: SkillRepository):
+    def __init__(self, monster_repository: MonsterRepository, skill_repository: SkillRepository,
+                 gear_repository: GearRepository):
         self.monster_repository = monster_repository
         self.skill_repository = skill_repository
+        self.gear_repository = gear_repository
 
     def get_current_expedition(self, player: Player) -> Optional[Expedition]:
         current_expedition_sql = ExpeditionSQL.query \
@@ -47,10 +51,15 @@ class ExpeditionSQLRepository(ExpeditionRepository):
         current_sector = Sector(sector_monsters_generator=sector_monsters_generator,
                                 monsters=monsters)
 
+        expedition_rewards_generator = ExpeditionRewardsGenerator(
+            self.gear_repository.get_all_gears()
+        )
+
         return Expedition(
             identifier=current_expedition_sql.id,
             player=player,
             sector_monsters_generator=sector_monsters_generator,
+            expedition_rewards_generator=expedition_rewards_generator,
             sector_level=current_expedition_sql.sector_level,
             sector=current_sector,
             status=current_expedition_sql.status,
@@ -97,5 +106,8 @@ class ExpeditionSQLRepository(ExpeditionRepository):
         player_sql.energy = expedition.player.energy
         player_sql.armor = expedition.player.armor
         player_sql.damage = expedition.player.damage
+        player_sql.max_life = expedition.player.max_life
+        player_sql.max_damage = expedition.player.max_damage
+
         db.session.add(player_sql)
         db.session.commit()

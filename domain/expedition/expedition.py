@@ -1,6 +1,7 @@
 from enum import Enum
 from random import randint
 
+from domain.expedition_rewards_generator.expedition_rewards_generator import ExpeditionRewardsGenerator
 from domain.player.player import Player
 from domain.expedition.sector import Sector
 from domain.sector_monsters_generator.sector_monsters_generator import SectorMonstersGenerator
@@ -16,12 +17,14 @@ class Expedition:
     def __init__(self,
                  player: Player,
                  sector_monsters_generator: SectorMonstersGenerator,
+                 expedition_rewards_generator: ExpeditionRewardsGenerator = None,
                  identifier: int = None,
                  sector: Sector = None,
                  sector_level: int = 1,
                  status: ExpeditionStatus = ExpeditionStatus.in_progress):
         self.identifier = identifier
         self.sector_monsters_generator = sector_monsters_generator
+        self.expedition_rewards_generator = expedition_rewards_generator
         self.player = player
         self.status = status
         if self.status != ExpeditionStatus.in_progress:
@@ -30,6 +33,8 @@ class Expedition:
             self.sector = sector if sector else Sector(sector_monsters_generator=self.sector_monsters_generator)
         self.sector_level = sector_level
         self.total_level = 3
+        self.credit_rewards = None
+        self.gear_reward = None
 
     def complete_level(self):
         if not self.sector:
@@ -49,6 +54,8 @@ class Expedition:
         if self.sector_level == self.total_level:
             self.status = ExpeditionStatus.success
             self.sector = None
+            self.credit_rewards = self.expedition_rewards_generator.generate_credit_rewards()
+            self.gear_reward = self.expedition_rewards_generator.generate_random_gear_rewards()
             return
         else:
             self.sector_level += 1

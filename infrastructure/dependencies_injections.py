@@ -17,7 +17,8 @@ skill_repository = SkillInMemoryRepository()
 gear_repository = GearInMemoryRepository()
 player_repository = PlayerSQLRepository(skill_repository=skill_repository)
 expedition_repository = ExpeditionSQLRepository(monster_repository=monster_repository,
-                                                skill_repository=skill_repository)
+                                                skill_repository=skill_repository,
+                                                gear_repository=gear_repository)
 
 get_player_details = GetPlayerDetails(player_repository=player_repository)
 create_new_player = CreateNewPlayer(player_repository=player_repository)
