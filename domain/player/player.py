@@ -57,7 +57,16 @@ class Player:
         self.life = int(max(0, self.life - damage * (1 - self.armor / 100)))
 
     def gain_experience(self, experience: int):
+        previous_level = self.level
         self.experience += experience
+        new_level = self.level
+        [self.level_up() for i in range(previous_level, new_level)]
+
+    def level_up(self):
+        self.max_life = int(self.max_life * 1.10)
+        self.max_damage = int(self.max_damage * 1.10)
+        self.max_armor = int(self.max_armor * 1.10)
+        self.max_energy = int(self.max_energy * 1.10)
 
     def is_dead(self) -> bool:
         return self.life == 0
