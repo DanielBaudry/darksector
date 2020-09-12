@@ -79,14 +79,8 @@ class Player:
         return self.life == 0
 
     def receive_gear(self, gear: Gear):
-        existing_gear = next(iter([player_gear for player_gear in self.gears
-                                   if player_gear.gear.identifier == gear.identifier]), None)
-        if existing_gear:
-            existing_gear.amount += 1
-        else:
-            self.gears.append(
-                PlayerGear(
-                    gear=gear,
-                    amount=1,
-                )
+        self.gears.append(
+            PlayerGear(
+                gear=gear,
             )
+        )

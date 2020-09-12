@@ -4,6 +4,6 @@ from domain.gear.gear import Gear
 class PlayerGear:
     def __init__(self,
                  gear: Gear,
-                 amount: int):
+                 is_equipped: bool = False):
         self.gear = gear
-        self.amount = amount
+        self.is_equipped = is_equipped

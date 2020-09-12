@@ -18,11 +18,13 @@ class PlayerSQLRepository(PlayerRepository):
 
     def get_player_by_user_id(self, user_id: int) -> Optional[Player]:
         player_sql_entity = PlayerSQL.query.filter(PlayerSQL.userId == user_id).first()
-        player_gears = PlayerGearSQL.query.filter()
+        if not player_sql_entity:
+            return None
+        player_gears = PlayerGearSQL.query.filter(PlayerGearSQL.playerId == player_sql_entity.id).all()
         gears = [PlayerGear(self.gear_repository.get_gear(player_gear.gear_id),
-                            player_gear.amount) for player_gear in player_gears]
+                            player_gear.is_equipped) for player_gear in player_gears]
         skills = self.skill_repository.get_all_skills()
-        return to_domain(player_sql_entity, skills, gears) if player_sql_entity else None
+        return to_domain(player_sql_entity, skills, gears)
 
     def save_for_user(self, user_id: int, player: Player) -> None:
         existing_player = PlayerSQL.query \

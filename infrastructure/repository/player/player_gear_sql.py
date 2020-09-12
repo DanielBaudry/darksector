@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 
 from infrastructure.repository.model import Model
@@ -16,9 +16,9 @@ class PlayerGearSQL(Model):
 
     player = relationship(PlayerSQL, foreign_keys=[playerId])
 
-    amount = Column(Integer, nullable=False, default=0)
+    is_equipped = Column(Boolean, nullable=False, default=False)
 
-    def __init__(self, gear_id: str, player_id: int, amount: int = 0):
+    def __init__(self, gear_id: str, player_id: int, is_equipped: bool = False):
         self.gear_id = gear_id
         self.playerId = player_id
-        self.amount = amount
+        self.is_equipped = is_equipped

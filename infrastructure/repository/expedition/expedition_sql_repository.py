@@ -1,3 +1,4 @@
+from itertools import groupby
 from typing import Optional
 
 from domain.expedition.expedition import Expedition, ExpeditionStatus
@@ -114,21 +115,18 @@ class ExpeditionSQLRepository(ExpeditionRepository):
         db.session.add(player_sql)
         db.session.commit()
 
-        # save new gears
-        for player_gear in expedition.player.gears:
-            print(player_gear)
-            print(player_gear.gear)
-            player_gear_sql = PlayerGearSQL.query \
+        for gear_id, group in groupby(expedition.player.gears, lambda player_gear: player_gear.gear.identifier):
+            nb_player_gear_sql = PlayerGearSQL.query \
                 .filter(PlayerGearSQL.playerId == player_sql.id) \
-                .filter(PlayerGearSQL.gear_id == player_gear.gear.identifier) \
-                .first()
-            if not player_gear_sql:
-                player_gear_sql = PlayerGearSQL(
-                    gear_id=player_gear.gear.identifier,
-                    player_id=player_sql.id)
+                .filter(PlayerGearSQL.gear_id == gear_id) \
+                .count()
 
-            player_gear_sql.amount += 1
-            db.session.add(player_gear_sql)
+            if nb_player_gear_sql < len(list(group)):
+                player_gear_sql = PlayerGearSQL(
+                    gear_id=gear_id,
+                    player_id=player_sql.id,
+                )
+                db.session.add(player_gear_sql)
         db.session.commit()
 
 
