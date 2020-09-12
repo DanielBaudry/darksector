@@ -57,6 +57,7 @@ class Expedition:
             self.credit_rewards = self.expedition_rewards_generator.generate_credit_rewards()
             self.player.gain_credits(credits_amount=self.credit_rewards)
             self.gear_reward = self.expedition_rewards_generator.generate_random_gear_rewards()
+            [self.player.receive_gear(gear) for gear in self.gear_reward]
             return
         else:
             self.sector_level += 1

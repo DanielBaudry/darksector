@@ -1,6 +1,8 @@
 from typing import List
 
+from domain.gear.gear import Gear
 from domain.player.experience_levels import ExperienceLevel
+from domain.player.player_gear import PlayerGear
 from domain.skill.skill import Skill
 
 BASIC_ATTACK_ENERGY_COST = 10
@@ -19,7 +21,8 @@ class Player:
                  armor: int = 10,
                  experience: int = 0,
                  credits_amount: int = 0,
-                 skills: List[Skill] = []):
+                 skills: List[Skill] = [],
+                 gears: List[PlayerGear] = []):
         self.identifier = identifier
         self.name = name
         self.max_life = max_life
@@ -33,6 +36,7 @@ class Player:
         self.credits = credits_amount
         self.experience = experience
         self.skills = skills
+        self.gears = gears
 
     @property
     def level(self):
@@ -73,3 +77,16 @@ class Player:
 
     def is_dead(self) -> bool:
         return self.life == 0
+
+    def receive_gear(self, gear: Gear):
+        existing_gear = next(iter([player_gear for player_gear in self.gears
+                                   if player_gear.gear.identifier == gear.identifier]), None)
+        if existing_gear:
+            existing_gear.amount += 1
+        else:
+            self.gears.append(
+                PlayerGear(
+                    gear=gear,
+                    amount=1,
+                )
+            )

@@ -1,8 +1,13 @@
+from typing import List
+
+from domain.gear.gear import Gear
 from domain.player.player import Player
+from domain.player.player_gear import PlayerGear
+from domain.skill.skill import Skill
 from infrastructure.repository.player.player_sql import PlayerSQL
 
 
-def to_domain(player_sql_entity: PlayerSQL, skills) -> Player:
+def to_domain(player_sql_entity: PlayerSQL, skills: List[Skill], gears: List[PlayerGear]) -> Player:
     return Player(
         identifier=player_sql_entity.id,
         name=player_sql_entity.name,
@@ -17,6 +22,7 @@ def to_domain(player_sql_entity: PlayerSQL, skills) -> Player:
         experience=player_sql_entity.experience,
         credits_amount=player_sql_entity.credits,
         skills=skills,
+        gears=gears,
     )
 
 

@@ -15,7 +15,8 @@ from use_cases.use_skill_on_monster import UseSkillOnMonster
 monster_repository = MonsterInMemoryRepository()
 skill_repository = SkillInMemoryRepository()
 gear_repository = GearInMemoryRepository()
-player_repository = PlayerSQLRepository(skill_repository=skill_repository)
+player_repository = PlayerSQLRepository(skill_repository=skill_repository,
+                                        gear_repository=gear_repository)
 expedition_repository = ExpeditionSQLRepository(monster_repository=monster_repository,
                                                 skill_repository=skill_repository,
                                                 gear_repository=gear_repository)
@@ -34,7 +35,6 @@ player_end_turn = PlayerEndTurn(player_repository=player_repository,
 start_new_expedition = StartNewExpedition(player_repository=player_repository,
                                           expedition_repository=expedition_repository,
                                           monster_repository=monster_repository)
-
 use_skill_on_monster = UseSkillOnMonster(player_repository=player_repository,
                                          expedition_repository=expedition_repository,
                                          skill_repository=skill_repository)

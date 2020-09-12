@@ -12,7 +12,7 @@ class GearInMemoryRepository(GearRepository):
         self.gears = [to_domain(gear.value) for gear in gears]
 
     def get_gear(self, name: str) -> Gear:
-        gear = [gear for gear in self.gears if gear.name == name][0]
+        gear = [gear for gear in self.gears if gear.identifier == name][0]
         return gear
 
     def get_all_gears(self) -> List[Gear]:
