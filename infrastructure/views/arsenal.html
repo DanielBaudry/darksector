@@ -19,11 +19,11 @@
                 {% for player_gear in player.gears %}
                 <li class="nav-item">
                     <a class="nav-link"
-                       id="{{ player_gear.gear.name }}-tab"
+                       id="{{ player_gear.identifier }}-tab"
                        data-toggle="tab"
-                       href="#{{ player_gear.gear.name }}"
+                       href="#{{ player_gear.identifier }}"
                        role="tab"
-                       aria-controls="{{ player_gear.gear.name }}"
+                       aria-controls="{{ player_gear.identifier }}"
                        aria-selected="true"
                     >
                         {{ player_gear.gear.name }}
@@ -36,13 +36,14 @@
             <div class="col-md-8 tab-content">
                 {% for player_gear in player.gears %}
                 <div class="tab-pane"
-                     id="{{ player_gear.gear.name }}"
+                     id="{{ player_gear.identifier }}"
                      role="tabpanel"
-                     aria-labelledby="{{ player_gear.gear.name }}-tab"
+                     aria-labelledby="{{ player_gear.identifier }}-tab"
                 >
                     <h2>{{ player_gear.gear.name }}</h2>
                     <div>
                         <ul class="list-group">
+                            <li class="list-group-item">Id: {{ player_gear.identifier }}</li>
                             <li class="list-group-item">Quality: {{ player_gear.gear.quality.value }}</li>
                             {% if player_gear.gear.__class__.__name__ == 'Weapon' %}
                             <li class="list-group-item">Damage: {{ player_gear.gear.damage }}</li>
@@ -53,6 +54,19 @@
                             {% endif %}
                         </ul>
                     </div>
+                    {% if not player_gear.is_equipped %}
+                    <form action="/arsenal" method="post">
+                        <input type="hidden" name="player_gear_id" value="{{ player_gear.identifier }}">
+                        <input type="hidden" name="to_equip" value="True">
+                        <input class="btn btn-dark" type="submit" value="Equip">
+                    </form>
+                    {% else %}
+                    <form action="/arsenal" method="post">
+                        <input type="hidden" name="player_gear_id" value="{{ player_gear.identifier }}">
+                        <input type="hidden" name="to_equip" value="False">
+                        <input class="btn btn-dark" type="submit" value="Unequip">
+                    </form>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>

@@ -21,8 +21,9 @@ class PlayerSQLRepository(PlayerRepository):
         if not player_sql_entity:
             return None
         player_gears = PlayerGearSQL.query.filter(PlayerGearSQL.playerId == player_sql_entity.id).all()
-        gears = [PlayerGear(self.gear_repository.get_gear(player_gear.gear_id),
-                            player_gear.is_equipped) for player_gear in player_gears]
+        gears = [PlayerGear(identifier=player_gear.id,
+                            gear=self.gear_repository.get_gear(player_gear.gear_id),
+                            is_equipped=player_gear.is_equipped) for player_gear in player_gears]
         skills = self.skill_repository.get_all_skills()
         return to_domain(player_sql_entity, skills, gears)
 

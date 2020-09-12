@@ -115,18 +115,11 @@ class ExpeditionSQLRepository(ExpeditionRepository):
         db.session.add(player_sql)
         db.session.commit()
 
-        for gear_id, group in groupby(expedition.player.gears, lambda player_gear: player_gear.gear.identifier):
-            nb_player_gear_sql = PlayerGearSQL.query \
-                .filter(PlayerGearSQL.playerId == player_sql.id) \
-                .filter(PlayerGearSQL.gear_id == gear_id) \
-                .count()
-
-            if nb_player_gear_sql < len(list(group)):
+        for player_gear in expedition.player.gears:
+            if not player_gear.identifier:
                 player_gear_sql = PlayerGearSQL(
-                    gear_id=gear_id,
+                    gear_id=player_gear.gear.identifier,
                     player_id=player_sql.id,
                 )
                 db.session.add(player_gear_sql)
         db.session.commit()
-
-

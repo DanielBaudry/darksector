@@ -84,3 +84,6 @@ class Player:
                 gear=gear,
             )
         )
+
+    def equip_gear(self, ):
+        pass
