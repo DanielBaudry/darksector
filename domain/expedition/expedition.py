@@ -55,6 +55,7 @@ class Expedition:
             self.status = ExpeditionStatus.success
             self.sector = None
             self.credit_rewards = self.expedition_rewards_generator.generate_credit_rewards()
+            self.player.gain_credits(credits_amount=self.credit_rewards)
             self.gear_reward = self.expedition_rewards_generator.generate_random_gear_rewards()
             return
         else:

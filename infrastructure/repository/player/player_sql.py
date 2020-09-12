@@ -34,8 +34,10 @@ class PlayerSQL(Model):
 
     experience = Column(Integer, nullable=False, default=0)
 
+    credits = Column(Integer, nullable=False, default=0)
+
     def __init__(self, user_id: int, name: str, life: int, energy: int, max_life: int, max_energy: int,
-                 damage: int, max_damage: int, armor: int, max_armor: int, experience: int = 0):
+                 damage: int, max_damage: int, armor: int, max_armor: int, experience: int = 0, credits_amount: int = 0):
         self.name = name
         self.userId = user_id
         self.life = life
@@ -47,3 +49,4 @@ class PlayerSQL(Model):
         self.max_damage = max_damage
         self.energy = energy
         self.max_energy = max_energy
+        self.credits = credits_amount

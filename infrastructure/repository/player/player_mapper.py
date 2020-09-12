@@ -15,6 +15,7 @@ def to_domain(player_sql_entity: PlayerSQL, skills) -> Player:
         armor=player_sql_entity.armor,
         max_armor=player_sql_entity.max_armor,
         experience=player_sql_entity.experience,
+        credits_amount=player_sql_entity.credits,
         skills=skills,
     )
 

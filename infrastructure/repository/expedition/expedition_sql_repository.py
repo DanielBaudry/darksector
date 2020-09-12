@@ -108,6 +108,7 @@ class ExpeditionSQLRepository(ExpeditionRepository):
         player_sql.damage = expedition.player.damage
         player_sql.max_life = expedition.player.max_life
         player_sql.max_damage = expedition.player.max_damage
+        player_sql.credits = expedition.player.credits
 
         db.session.add(player_sql)
         db.session.commit()

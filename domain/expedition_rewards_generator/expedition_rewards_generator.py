@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, random
 from typing import List, Optional
 
 from domain.gear.gear import Gear
@@ -9,10 +9,9 @@ class ExpeditionRewardsGenerator:
         self.available_gears = available_gears
 
     def generate_random_gear_rewards(self) -> List[Optional[Gear]]:
-        for i in range(100):
-            if randint(0, 100) == i:
-                gear_index = randint(0, len(self.available_gears))
-                return [self.available_gears[gear_index]]
+        if random() > 0.6:
+            gear_index = randint(0, len(self.available_gears))
+            return [self.available_gears[gear_index]]
         return []
 
     def generate_credit_rewards(self) -> int:

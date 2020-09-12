@@ -18,6 +18,7 @@ class Player:
                  max_armor: int = 10,
                  armor: int = 10,
                  experience: int = 0,
+                 credits_amount: int = 0,
                  skills: List[Skill] = []):
         self.identifier = identifier
         self.name = name
@@ -29,6 +30,7 @@ class Player:
         self.max_damage = max_damage
         self.armor = armor
         self.max_armor = max_armor
+        self.credits = credits_amount
         self.experience = experience
         self.skills = skills
 
@@ -61,6 +63,9 @@ class Player:
         self.experience += experience
         new_level = self.level
         [self.level_up() for i in range(previous_level, new_level)]
+
+    def gain_credits(self, credits_amount: int):
+        self.credits += credits_amount
 
     def level_up(self):
         self.max_life = int(self.max_life * 1.10)
