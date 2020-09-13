@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from domain.gear.gear import Gear, PlayerPart
+from domain.gear.gear import Gear, PlayerPart, Weapon, Armor
 from domain.player.experience_levels import ExperienceLevel
 from domain.player.player_gear import PlayerGear
 from domain.skill.skill import Skill
@@ -159,12 +159,46 @@ class Player:
             )
         )
 
-    def equip_gear(self, player_gear_id: int, to_equip: bool):
+    def equip_player_gear(self, player_gear_id: int, to_equip: bool):
         expected_gear = next(iter([player_gear for player_gear in self.gears
                                    if player_gear.identifier == player_gear_id]), None)
 
         for player_gear in self.gears:
             if player_gear.is_equipped and player_gear.gear.player_part == expected_gear.gear.player_part:
                 player_gear.is_equipped = False
+                self.unequip_gear(gear=player_gear.gear)
 
         expected_gear.is_equipped = to_equip
+        gear = expected_gear.gear
+        if to_equip is True:
+            self.equip_gear(gear=gear)
+        else:
+            self.unequip_gear(gear=gear)
+
+    def equip_gear(self, gear: Gear):
+        if isinstance(gear, Weapon):
+            self.max_damage += gear.damage
+            self.max_energy += gear.energy
+            self.damage = self.max_damage
+            self.energy = self.max_energy
+        elif isinstance(gear, Armor):
+            self.max_life += gear.life
+            self.max_armor += gear.armor
+            self.max_energy += gear.energy
+            self.life = self.max_life
+            self.armor = self.max_armor
+            self.energy = self.max_energy
+
+    def unequip_gear(self, gear: Gear):
+        if isinstance(gear, Weapon):
+            self.max_damage -= gear.damage
+            self.max_energy -= gear.energy
+            self.damage = self.max_damage
+            self.energy = self.max_energy
+        elif isinstance(gear, Armor):
+            self.max_life -= gear.life
+            self.max_armor -= gear.armor
+            self.max_energy -= gear.energy
+            self.life = self.max_life
+            self.armor = self.max_armor
+            self.energy = self.max_energy

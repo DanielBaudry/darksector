@@ -102,6 +102,12 @@
                     <span><strong>Feet</strong></span>
                     <span>{{ player.feet.name }}</span>
                 </div>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item">Life: {{ player.life }}/{{ player.max_life }}</li>
+                    <li class="list-group-item">Energy: {{ player.energy }}/{{ player.max_energy }}</li>
+                    <li class="list-group-item">Damage: {{ player.damage }}/{{ player.max_damage }}</li>
+                    <li class="list-group-item">Armor: {{ player.armor }}/{{ player.max_armor }}</li>
+                </ul>
             </div>
         </div>
 

@@ -29,3 +29,16 @@ class InMemoryGears(Enum):
         'armor': 10,
         'energy': 10,
     }
+
+    chest_armor2 = {
+        'id': 'chest_armor2',
+        'name': 'Lunar Chest Armor',
+        'quality': GearQuality.normal,
+        'credit_cost': 1200,
+        'level_requirement': 1,
+        'player_part': PlayerPart.chest,
+        'damage': 0,
+        'life': 140,
+        'armor': 5,
+        'energy': 0,
+    }

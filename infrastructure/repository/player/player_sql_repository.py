@@ -48,6 +48,10 @@ class PlayerSQLRepository(PlayerRepository):
         existing_player.energy = player.energy
         existing_player.armor = player.armor
         existing_player.life = player.life
+        existing_player.max_damage = player.max_damage
+        existing_player.max_energy = player.max_energy
+        existing_player.max_armor = player.max_armor
+        existing_player.max_life = player.max_life
 
         db.session.add(existing_player)
 
