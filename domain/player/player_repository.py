@@ -11,3 +11,7 @@ class PlayerRepository(ABC):
     @abstractmethod
     def save_for_user(self, user_id: int, player: Player) -> None:
         pass
+
+    @abstractmethod
+    def update(self, player: Player) -> None:
+        pass

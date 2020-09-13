@@ -5,6 +5,7 @@ from infrastructure.repository.player.player_sql_repository import PlayerSQLRepo
 from infrastructure.repository.skill.skill_in_memory_repository import SkillInMemoryRepository
 from use_cases.complete_sector_level import CompleteSectorLevel
 from use_cases.create_new_player import CreateNewPlayer
+from use_cases.equip_gear import EquipGear
 from use_cases.get_current_sector import GetCurrentExpedition
 from use_cases.get_player_details import GetPlayerDetails
 from use_cases.player_attack_monster import PlayerAttackMonster
@@ -38,3 +39,4 @@ start_new_expedition = StartNewExpedition(player_repository=player_repository,
 use_skill_on_monster = UseSkillOnMonster(player_repository=player_repository,
                                          expedition_repository=expedition_repository,
                                          skill_repository=skill_repository)
+equip_gear = EquipGear(player_repository=player_repository)

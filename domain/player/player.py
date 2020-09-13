@@ -1,6 +1,6 @@
-from typing import List
+from typing import List, Optional
 
-from domain.gear.gear import Gear
+from domain.gear.gear import Gear, PlayerPart
 from domain.player.experience_levels import ExperienceLevel
 from domain.player.player_gear import PlayerGear
 from domain.skill.skill import Skill
@@ -37,6 +37,80 @@ class Player:
         self.experience = experience
         self.skills = skills
         self.gears = gears
+
+    @property
+    def head(self) -> Optional[Gear]:
+        for player_gear in self.gears:
+            if player_gear.is_equipped and player_gear.gear.player_part == PlayerPart.head:
+                return player_gear.gear
+        return None
+
+    @property
+    def chest(self) -> Optional[Gear]:
+        for player_gear in self.gears:
+            if player_gear.is_equipped and player_gear.gear.player_part == PlayerPart.chest:
+                return player_gear.gear
+        return None
+
+    @property
+    def legs(self) -> Optional[Gear]:
+        for player_gear in self.gears:
+            if player_gear.is_equipped and player_gear.gear.player_part == PlayerPart.legs:
+                return player_gear.gear
+        return None
+
+    @property
+    def feet(self) -> Optional[Gear]:
+        for player_gear in self.gears:
+            if player_gear.is_equipped and player_gear.gear.player_part == PlayerPart.feet:
+                return player_gear.gear
+        return None
+
+    @property
+    def left_shoulder(self) -> Optional[Gear]:
+        for player_gear in self.gears:
+            if player_gear.is_equipped and player_gear.gear.player_part == PlayerPart.left_shoulder:
+                return player_gear.gear
+        return None
+
+    @property
+    def right_shoulder(self) -> Optional[Gear]:
+        for player_gear in self.gears:
+            if player_gear.is_equipped and player_gear.gear.player_part == PlayerPart.right_shoulder:
+                return player_gear.gear
+        return None
+
+    @property
+    def left_hand(self) -> Optional[Gear]:
+        for player_gear in self.gears:
+            if player_gear.is_equipped \
+                    and (player_gear.gear.player_part == PlayerPart.left_hand
+                         or player_gear.gear.player_part == PlayerPart.both_hands):
+                return player_gear.gear
+        return None
+
+    @property
+    def right_hand(self) -> Optional[Gear]:
+        for player_gear in self.gears:
+            if player_gear.is_equipped \
+                    and (player_gear.gear.player_part == PlayerPart.right_hand
+                         or player_gear.gear.player_part == PlayerPart.both_hands):
+                return player_gear.gear
+        return None
+
+    @property
+    def left_arm(self) -> Optional[Gear]:
+        for player_gear in self.gears:
+            if player_gear.is_equipped and player_gear.gear.player_part == PlayerPart.left_arm:
+                return player_gear.gear
+        return None
+
+    @property
+    def right_arm(self) -> Optional[Gear]:
+        for player_gear in self.gears:
+            if player_gear.is_equipped and player_gear.gear.player_part == PlayerPart.right_arm:
+                return player_gear.gear
+        return None
 
     @property
     def level(self):
@@ -85,5 +159,12 @@ class Player:
             )
         )
 
-    def equip_gear(self, ):
-        pass
+    def equip_gear(self, player_gear_id: int, to_equip: bool):
+        expected_gear = next(iter([player_gear for player_gear in self.gears
+                                   if player_gear.identifier == player_gear_id]), None)
+
+        for player_gear in self.gears:
+            if player_gear.is_equipped and player_gear.gear.player_part == expected_gear.gear.player_part:
+                player_gear.is_equipped = False
+
+        expected_gear.is_equipped = to_equip

@@ -7,8 +7,8 @@ from domain.player.player_repository import PlayerRepository
 from domain.skill.skill_repository import SkillRepository
 from infrastructure.repository.db import db
 from infrastructure.repository.player.player_gear_sql import PlayerGearSQL
-from infrastructure.repository.player.player_sql import PlayerSQL
 from infrastructure.repository.player.player_mapper import to_domain, to_sql_entity
+from infrastructure.repository.player.player_sql import PlayerSQL
 
 
 class PlayerSQLRepository(PlayerRepository):
@@ -50,4 +50,14 @@ class PlayerSQLRepository(PlayerRepository):
         existing_player.life = player.life
 
         db.session.add(existing_player)
+
+        for player_gear in player.gears:
+            player_gear_sql = PlayerGearSQL.query.get(player_gear.identifier)
+            if not player_gear_sql:
+                player_gear_sql = PlayerGearSQL(
+                    gear_id=player_gear.gear.identifier,
+                    player_id=existing_player.id,
+                )
+            player_gear_sql.is_equipped = player_gear.is_equipped
+            db.session.add(player_gear_sql)
         db.session.commit()
