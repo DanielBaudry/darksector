@@ -1,5 +1,0 @@
-import infrastructure.controllers.login
-import infrastructure.controllers.player
-import infrastructure.controllers.darksector
-import infrastructure.controllers.fight
-import infrastructure.controllers.arsenal

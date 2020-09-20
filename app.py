@@ -4,11 +4,11 @@ from flask import Flask
 from flask_login import LoginManager
 from sqlalchemy import orm
 
-from infrastructure.repository.db import db
-from infrastructure.repository.user.user_sql_repository import UserSQLRepository
+from src.infrastructure.repository.db import db
+from src.infrastructure.repository.user.user_sql_repository import UserSQLRepository
 
 app = Flask(__name__,
-            template_folder='infrastructure/views',
+            template_folder='src/infrastructure/views',
             static_url_path='/static')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/darksector.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -25,7 +25,7 @@ db.init_app(app)
 login_manager.init_app(app)
 
 with app.app_context():
-    import infrastructure.controllers
+    import src.infrastructure.controllers
     orm.configure_mappers()
     db.create_all()
     db.session.commit()
