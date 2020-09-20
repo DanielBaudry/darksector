@@ -1,7 +1,7 @@
-from flask import current_app as app, render_template, redirect, url_for
+from flask import current_app as app, render_template
 from flask_login import login_required, current_user
 
-from infrastructure.dependencies_injections import get_current_expedition, complete_sector_level, start_new_expedition
+from infrastructure.dependencies_injections import get_current_expedition, start_new_expedition, player_end_turn
 
 
 @app.route('/darksector', methods=['GET'])
@@ -30,6 +30,6 @@ def start_darksector():
 @app.route('/darksector/next', methods=['GET'])
 @login_required
 def complete_sector():
-    expedition = complete_sector_level.execute(user_id=current_user.id)
+    expedition = player_end_turn.execute(user_id=current_user.id)
     return render_template('darksector.html', sector=expedition.sector, expedition=expedition, player=expedition.player,
                            error=None)

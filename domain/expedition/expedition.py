@@ -68,6 +68,9 @@ class Expedition:
         if not self.sector:
             return
 
+        if sum([sector_monster.quantity for sector_monster in self.sector.monsters]) == 0:
+            return self.complete_level()
+
         sector_monster_number = len(self.sector.monsters)
         monster_index = 0 if sector_monster_number else randint(0, sector_monster_number)
         self.sector.monsters[monster_index].attack(self.player)

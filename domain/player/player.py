@@ -9,7 +9,8 @@ BASIC_ATTACK_ENERGY_COST = 10
 
 
 class Player:
-    def __init__(self, name: str,
+    def __init__(self,
+                 name: str,
                  identifier: int = None,
                  max_life: int = 200,
                  life: int = 200,

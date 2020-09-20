@@ -3,7 +3,6 @@ from infrastructure.repository.gear.gear_in_memory_repository import GearInMemor
 from infrastructure.repository.monster.monster_in_memory_repository import MonsterInMemoryRepository
 from infrastructure.repository.player.player_sql_repository import PlayerSQLRepository
 from infrastructure.repository.skill.skill_in_memory_repository import SkillInMemoryRepository
-from use_cases.complete_sector_level import CompleteSectorLevel
 from use_cases.create_new_player import CreateNewPlayer
 from use_cases.equip_gear import EquipGear
 from use_cases.get_current_sector import GetCurrentExpedition
@@ -27,8 +26,6 @@ create_new_player = CreateNewPlayer(player_repository=player_repository)
 get_current_expedition = GetCurrentExpedition(player_repository=player_repository,
                                               expedition_repository=expedition_repository,
                                               monster_repository=monster_repository)
-complete_sector_level = CompleteSectorLevel(player_repository=player_repository,
-                                            expedition_repository=expedition_repository)
 player_attack_monster = PlayerAttackMonster(player_repository=player_repository,
                                             expedition_repository=expedition_repository)
 player_end_turn = PlayerEndTurn(player_repository=player_repository,
