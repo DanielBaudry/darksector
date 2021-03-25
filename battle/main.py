@@ -1,12 +1,13 @@
+from random import randrange
+
 from domain.dark_zone import DarkZone
-from infrastructure.reward_generator_random import RewardGeneratorRandom
-from domain.fight import Fight
 from domain.monster import Monster
 from domain.player import Player
+from run_dark_zone import run_dark_zone
 from infrastructure.fight_logger_in_memory import FightLoggerInMemory
+from infrastructure.player_actions import get_menu_action, get_user_action
+from infrastructure.reward_generator_random import RewardGeneratorRandom
 from infrastructure.views import display_turn_summary
-from infrastructure.player_actions import get_user_action
-
 
 if __name__ == '__main__':
     # ======== Get from data source ====================
@@ -16,47 +17,31 @@ if __name__ == '__main__':
 
     player = Player('John', health=100)
 
-    monster1 = Monster(health=20)
-    monster2 = Monster(health=20)
-    monster3 = Monster(health=20)
-    monster4 = Monster(health=20)
-    monster5 = Monster(health=20)
-    monsters = [monster1, monster2]
+    game_is_running = True
+    while game_is_running:
+        menu_action = get_menu_action()
+        if menu_action == 'd':
+            dark_zone = DarkZone(
+                levels=[
+                    [Monster(health=randrange(10, 20)), Monster(health=randrange(10, 20)),
+                     Monster(health=randrange(10, 20))],
+                    [Monster(health=randrange(20, 30)), Monster(health=randrange(20, 30))]
+                ],
+                possible_rewards=['Fusil x23', 'Casque ZE'],
+                reward_generator=reward_generator,
+            )
 
-    dark_zone = DarkZone(
-        levels=[
-            [monster1, monster2],
-            #[monster3, monster4, monster5]
-        ],
-        possible_rewards=['épée', 'bouclier'],
-        reward_generator=reward_generator,
-    )
+            print("+++++++++++++++++++++++++++")
+            print('Match Start')
+            fight_result = run_dark_zone(player, dark_zone, fight_logger, display_turn_summary, get_user_action)
+            print("You WIN") if fight_result else print("You LOSE")
+            print('Match End')
+            print("+++++++++++++++++++++++++++")
 
-    while dark_zone.rewards is None:
-        fight = Fight(player, dark_zone.get_current_level_monsters())
-        fight.register(fight_logger)
-        fight.register(dark_zone)
-        # ======================================
+            print(f'Vous avez gagné: {dark_zone.get_rewards()}')
 
-        fight_result = True
-        print('Match Start')
-        display_turn_summary(fight.get_details())
-        while fight.is_running:
-            # route param
-            user_action_monster_index = get_user_action()
-            try:
-                fight_result = fight.run(user_action_monster_index)
-            except Exception as e:
-                print(e)
-            else:
-                print(fight_logger.last_message())
-                display_turn_summary(fight.get_details())
-
-        print("You WIN") if fight_result else print("You LOSE")
-        print("+++++++++++++++++++++++++++")
-        for msg in fight_logger.messages:
-            print(msg)
-        print("+++++++++++++++++++++++++++")
-        print('Match End')
-
-    print(f'Vous avez gagné: {dark_zone.get_rewards()}')
+            # reset player after dark zone
+            player.health = 100
+        else:
+            print("Action incorrecte")
+    print("Bye")

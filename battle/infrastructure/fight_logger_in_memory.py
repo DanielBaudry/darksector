@@ -1,5 +1,5 @@
-from domain.fight import FightEventType
 from domain.event_handler import EventHandler
+from domain.fight import FightEventType
 
 
 class FightLoggerInMemory(EventHandler):
@@ -20,3 +20,9 @@ class FightLoggerInMemory(EventHandler):
         if len(self.messages) > 0:
             return f'[Message {len(self.messages) - 1}] {self.messages[len(self.messages) - 1]}'
         return ''
+
+    def get_messages_from(self, index: int):
+        messages = []
+        for msg in self.messages[index:]:
+            messages.append(f'[Message] {msg}')
+        return messages

@@ -1,7 +1,5 @@
-from typing import List
-
 from domain.ability import AllAbilities
-from domain.fighter import Fighter
+from domain.fighter import Fighter, FighterAbility
 
 
 class Player(Fighter):
@@ -9,4 +7,4 @@ class Player(Fighter):
         super().__init__(health)
         self.name = name
         self.damage = 10
-        self.abilities.append(AllAbilities.GRENADE)
+        self.abilities.append(FighterAbility(AllAbilities.GRENADE))

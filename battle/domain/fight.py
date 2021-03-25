@@ -74,16 +74,26 @@ class Fight:
         }
 
     def user_plays(self, monster_index: int, player_ability):
-        
+        if self.monsters[monster_index].is_dead:
+            return False
+
+        if self.player.is_ability_on_cooldown(player_ability):
+            return False
+
+        self.player.reduce_abilities_cooldown()
+        self.player.use_ability(player_ability)
+
         ability_radius = player_ability.value.radius
-        monsters_to_attack = set(self.monsters[monster_index-ability_radius:monster_index+ability_radius])
+        ability_left_effect = max(0, monster_index - ability_radius)
+        ability_right_effect = min(len(self.monsters) - 1, monster_index + ability_radius) + 1
+        monsters_to_attack = self.monsters[ability_left_effect:ability_right_effect]
+
         for monster_to_attack in monsters_to_attack:
             if not monster_to_attack.is_dead:
                 total_damage = self.player.damage * player_ability.value.power
                 self.player.inflict_damage(monster_to_attack, total_damage)
                 self.notify(FightEvent(FightEventType.USER_ACTION, self.player, [monster_to_attack]))
-            return True
-        return False
+        return True
 
     def monsters_plays(self):
         attackers = []
