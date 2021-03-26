@@ -16,7 +16,15 @@ def run_dark_zone(player, dark_zone, fight_logger, display_turn_summary, get_use
         while fight.is_running:
             # route param
             user_action_monster_index, ability = get_user_action()
-            user_ability = AllAbilities.GRENADE if ability == 'g' else AllAbilities.BASIC_ABILITY
+            # remove from here
+            if ability == 'g':
+                user_ability = AllAbilities.GRENADE
+            elif ability == 's':
+                user_ability = AllAbilities.STIMULANT
+
+            else:
+                user_ability = AllAbilities.BASIC_ABILITY
+
             try:
                 fight_result = fight.run(user_action_monster_index, user_ability)
             except Exception as e:

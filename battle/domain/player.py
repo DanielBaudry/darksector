@@ -3,8 +3,7 @@ from domain.fighter import Fighter, FighterAbility
 
 
 class Player(Fighter):
-    def __init__(self, name: str, health: int):
-        super().__init__(health)
+    def __init__(self, name: str, health: int, damage: int = 10):
+        super().__init__(health, damage)
         self.name = name
-        self.damage = 10
         self.abilities.append(FighterAbility(AllAbilities.GRENADE))

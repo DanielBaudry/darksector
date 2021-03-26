@@ -8,5 +8,5 @@ def get_menu_action():
 def get_user_action():
     return [
         int(input("Quel monstre voulez vous attaquer ? ")) - 1,
-        input("Quelle compétence (g: pour grenade) ? ")
+        input("Quelle compétence (g: pour grenade, s: stimulant) ? ")
     ]

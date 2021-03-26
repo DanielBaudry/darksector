@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List, Optional, Dict
 
-from domain.ability import AllAbilities
+from domain.ability import AllAbilities, SelfAbility, DamageAbility
 from domain.event_handler import EventHandler
 from domain.fighter import Fighter
 from domain.monster import Monster
@@ -44,10 +44,12 @@ class Fight:
                 else:
                     raise Exception('Action non autorisée')
 
-            self.monsters_plays()
+            if not self.user_turn:
+                self.monsters_plays()
 
-            self.fight_turn += 1
-            self.user_turn = True
+                self.fight_turn += 1
+                self.user_turn = True
+
             monsters_life = sum([m.health for m in self.monsters])
 
         if self.player.health <= 0 or monsters_life <= 0:
@@ -83,16 +85,26 @@ class Fight:
         self.player.reduce_abilities_cooldown()
         self.player.use_ability(player_ability)
 
-        ability_radius = player_ability.value.radius
-        ability_left_effect = max(0, monster_index - ability_radius)
-        ability_right_effect = min(len(self.monsters) - 1, monster_index + ability_radius) + 1
-        monsters_to_attack = self.monsters[ability_left_effect:ability_right_effect]
+        ability = player_ability.value
+        # TODO: I dont like isinstance.. maybe some visitor pattern in here ?
+        if isinstance(ability, SelfAbility):
+            self.player.receive_effect(ability.effects)
+            for effect in self.player.effects:
+                self.register(effect)
 
-        for monster_to_attack in monsters_to_attack:
-            if not monster_to_attack.is_dead:
-                total_damage = self.player.damage * player_ability.value.power
-                self.player.inflict_damage(monster_to_attack, total_damage)
-                self.notify(FightEvent(FightEventType.USER_ACTION, self.player, [monster_to_attack]))
+            # notify like: PLayer use a potion
+            # self.notify(FightEvent(FightEventType.USER_ACTION, self.player, []))
+        elif isinstance(ability, DamageAbility):
+            ability_radius = ability.radius
+            ability_left_effect = max(0, monster_index - ability_radius)
+            ability_right_effect = min(len(self.monsters) - 1, monster_index + ability_radius) + 1
+            monsters_to_attack = self.monsters[ability_left_effect:ability_right_effect]
+
+            for monster_to_attack in monsters_to_attack:
+                if not monster_to_attack.is_dead:
+                    total_damage = int(self.player.damage * ability.damage_multiplier)
+                    self.player.inflict_damage(monster_to_attack, total_damage)
+                    self.notify(FightEvent(FightEventType.USER_ACTION, self.player, [monster_to_attack]))
         return True
 
     def monsters_plays(self):
