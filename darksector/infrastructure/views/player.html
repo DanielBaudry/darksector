@@ -1,0 +1,66 @@
+<html>
+<head>
+    <title>Dark Sector</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/static/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/static/main.css" rel="stylesheet" media="screen">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <button type="button" class="btn-dark" onclick="getMonsters()">Go get some monsters</button>
+        <div id="battle">
+        </div>
+        <input type="number" name="monster_index" min="0" max="10">
+        <select class="custom-select col-md-3" name="skill_name">
+            <option value="basic">Attaque simple</option>
+        </select>
+        <button type="button" class="btn-dark" onclick="sendPlayerAction()">Check</button>
+
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="application/javascript">
+        function getMonsters() {
+             $.ajax({
+              url: "/monsters",
+              type: "GET",
+              data: {},
+              success: function(response) {
+                $("#battle").html(response);
+              },
+              error: function(error) {
+                //Do Something to handle error
+              }
+            });
+        }
+
+        function sendPlayerAction() {
+            const monster_index = document.querySelector("input[name='monster_index']")
+            const skill_name = document.querySelector("select[name='skill_name']")
+
+            let fetchJsonRequest = {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    monster_index: monster_index.value,
+                    skill_name: skill_name.value,
+                })
+            }
+
+            fetch(`${window.origin}/fight`, fetchJsonRequest).then(function(response){
+                response.json().then(function(data) {
+                    console.log(data);
+                    let playerInfo = document.querySelector("span[class='Monster-health']")
+                    playerInfo.innerHTML = 'John'
+                })
+            }).catch(function(error){
+                console.log(error)
+            });
+        }
+    </script>
+</body>
+</html>

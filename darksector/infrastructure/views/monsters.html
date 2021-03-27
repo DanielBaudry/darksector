@@ -1,0 +1,9 @@
+<ul class="list-group list-group-flush">
+    {% for sector_monster in monsters %}
+    <li class="list-group-item">
+        <span>{{ sector_monster.name }}: <i>
+            <span class="{{ sector_monster.name }}-health">{{ sector_monster.health }}</span>/{{ sector_monster.health }}
+        </i></span>
+    </li>
+    {% endfor %}
+</ul>

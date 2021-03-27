@@ -3,13 +3,14 @@ import os
 from flask import Flask
 from flask_login import LoginManager
 
-from battle.infrastructure.database.db import db_session
+from darksector.infrastructure.database.db import db_session
 
 # from battle.infrastructure.database.user.user_sql_repository import UserSQLRepository
 from infrastructure import controllers
 from infrastructure.database import init_db
 
 app = Flask(__name__,
+            template_folder='darksector/infrastructure/views',
             static_url_path='/static')
 app.secret_key = os.environ.get('FLASK_SECRET', '+%+3Q23!zbc+!Dd@')
 
