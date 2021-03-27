@@ -22,20 +22,20 @@ class FighterAbility:
 
 
 class FighterEffect:
-    def __init__(self, effect):
+    def __init__(self, effect: AbilityEffect, remaining_turns: Optional[int] = None):
         self.effect = effect
-        self.turn_duration = effect.turn_duration
+        self.remaining_turns = effect.turn_duration if not remaining_turns else remaining_turns
 
     def decrease_duration(self):
-        self.turn_duration = max(0, self.turn_duration - 1)
+        self.remaining_turns = max(0, self.remaining_turns - 1)
 
 
 class Fighter(ABC):
-    def __init__(self, health: int, damage: int):
+    def __init__(self, health: int, damage: int, fighter_effects: List[FighterEffect] = []):
         self.health = health
         self.damage = damage
         self.abilities = [FighterAbility(AllAbilities.BASIC_ABILITY)]
-        self.effects = []
+        self.fighter_effects = fighter_effects
 
     def inflict_damage(self, fighter: 'Fighter', damage: int):
         fighter.receive_damage(damage)
@@ -64,24 +64,46 @@ class Fighter(ABC):
                 return fighter_ability.is_on_cooldown()
         return False
 
-    # TODO: refactor needed here, probably not the fighter responsibility to compute all this
-    def receive_effect(self, effects: List[AbilityEffect]) -> bool:
+    def add_effects(self, effects: List[AbilityEffect]):
         for effect in effects:
-            if effect.fighter_trait == 'health':
-                if effect.fix_amount:
-                    self.health = self.health + effect.fix_amount
+            self.fighter_effects.append(FighterEffect(effect))
+
+    def apply_effects(self) -> bool:
+        for fighter_effect in self.fighter_effects:
+            # TODO: very moche (extract in apply_effect method is a start)
+            if (fighter_effect.effect.turn_tick == 0
+                and fighter_effect.remaining_turns == fighter_effect.effect.turn_duration) \
+                    or (fighter_effect.effect.turn_tick != 0 and
+                        fighter_effect.remaining_turns % fighter_effect.effect.turn_tick == 0):
+                effect = fighter_effect.effect
+                # TODO: we can find a better way
+                if effect.fighter_trait == 'health':
+                    self.health = effect.compute_effect(self.health)
+                elif effect.fighter_trait == 'damage':
+                    self.damage = effect.compute_effect(self.damage)
                 else:
-                    self.health = self.health + self.health * effect.multiplier
-            elif effect.fighter_trait == 'damage':
-                if effect.fix_amount:
-                    self.damage = self.damage + effect.fix_amount
-                else:
-                    self.damage = self.damage + self.damage * effect.multiplier
-            else:
-                return False
+                    return False
         return True
 
+    def reverse_effect(self, fighter_effect) -> bool:
+        effect = fighter_effect.effect
+        # TODO: we can find a better way
+        if effect.fighter_trait == 'health':
+            self.health = effect.compute_reverse_effect(self.health)
+        elif effect.fighter_trait == 'damage':
+            self.damage = effect.compute_reverse_effect(self.damage)
+        else:
+            return False
+        return True
+
+    # TODO: can be better
     def reduce_effects_cooldown(self):
-        for fighter_effect in self.effects:
-            fighter_effect.reduce_cooldown()
-            # TODO: removoe not active effects
+        active_effects = []
+        for fighter_effect in self.fighter_effects:
+            fighter_effect.decrease_duration()
+            if fighter_effect.remaining_turns > 0:
+                active_effects.append(fighter_effect)
+            else:
+                if fighter_effect.effect.turn_duration > 0:
+                    self.reverse_effect(fighter_effect)
+        self.fighter_effects = active_effects

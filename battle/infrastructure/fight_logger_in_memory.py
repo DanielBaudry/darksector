@@ -1,5 +1,4 @@
-from domain.event_handler import EventHandler
-from domain.fight import FightEventType
+from domain.event_handler import EventHandler, FightEventType
 
 
 class FightLoggerInMemory(EventHandler):

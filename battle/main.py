@@ -1,13 +1,15 @@
 from random import randrange
 
+from domain.ability import AllAbilities
 from domain.dark_zone import DarkZone
+from domain.fighter import FighterAbility
 from domain.monster import Monster
 from domain.player import Player
-from run_dark_zone import run_dark_zone
 from infrastructure.fight_logger_in_memory import FightLoggerInMemory
 from infrastructure.player_actions import get_menu_action, get_user_action
 from infrastructure.reward_generator_random import RewardGeneratorRandom
 from infrastructure.views import display_turn_summary
+from run_dark_zone import run_dark_zone
 
 if __name__ == '__main__':
     # ======== Get from data source ====================
@@ -15,7 +17,7 @@ if __name__ == '__main__':
     fight_logger = FightLoggerInMemory()
     reward_generator = RewardGeneratorRandom()
 
-    player = Player('John', health=100)
+    player = Player('John', health=100, additional_abilities=[FighterAbility(AllAbilities.GRENADE)])
 
     game_is_running = True
     while game_is_running:

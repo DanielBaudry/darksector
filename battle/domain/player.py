@@ -1,9 +1,12 @@
-from domain.ability import AllAbilities
+from typing import List, Optional
+
 from domain.fighter import Fighter, FighterAbility
 
 
 class Player(Fighter):
-    def __init__(self, name: str, health: int, damage: int = 10):
+    def __init__(self, name: str, health: int, damage: int = 10,
+                 additional_abilities: Optional[List[FighterAbility]] = None):
         super().__init__(health, damage)
         self.name = name
-        self.abilities.append(FighterAbility(AllAbilities.GRENADE))
+        if additional_abilities:
+            self.abilities += additional_abilities

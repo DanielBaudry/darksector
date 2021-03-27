@@ -1,26 +1,9 @@
-from enum import Enum
 from typing import List, Optional, Dict
 
 from domain.ability import AllAbilities, SelfAbility, DamageAbility
-from domain.event_handler import EventHandler
-from domain.fighter import Fighter
+from domain.event_handler import EventHandler, FightEventType, FightEvent
 from domain.monster import Monster
 from domain.player import Player
-
-
-class FightEventType(Enum):
-    USER_ACTION = 'user_action'
-    MONSTER_ACTION = 'monster_action'
-    PLAYER_WIN = 'player_win'
-    PLAYER_LOSE = 'player_lose'
-
-
-class FightEvent:
-    def __init__(self, fight_event_type: FightEventType,
-                 fighter: Fighter = None, receivers: Optional[List] = None):
-        self.fighter = fighter
-        self.receivers = receivers
-        self.fight_action_type = fight_event_type
 
 
 class Fight:
@@ -68,6 +51,7 @@ class Fight:
         for observers in self.observers:
             observers.update(action, self)
 
+    # TODO: This look like some serialization
     def get_details(self) -> Dict:
         return {
             'fight_turn': self.fight_turn,
@@ -75,6 +59,8 @@ class Fight:
             'monsters': self.monsters
         }
 
+    # TODO: probably a class
+    # TODO: I dont like isinstance.. maybe some visitor pattern in here ?
     def user_plays(self, monster_index: int, player_ability):
         if self.monsters[monster_index].is_dead:
             return False
@@ -82,35 +68,34 @@ class Fight:
         if self.player.is_ability_on_cooldown(player_ability):
             return False
 
-        self.player.reduce_abilities_cooldown()
         self.player.use_ability(player_ability)
 
         ability = player_ability.value
-        # TODO: I dont like isinstance.. maybe some visitor pattern in here ?
         if isinstance(ability, SelfAbility):
-            self.player.receive_effect(ability.effects)
-            for effect in self.player.effects:
-                self.register(effect)
-
-            # notify like: PLayer use a potion
-            # self.notify(FightEvent(FightEventType.USER_ACTION, self.player, []))
-        elif isinstance(ability, DamageAbility):
-            ability_radius = ability.radius
-            ability_left_effect = max(0, monster_index - ability_radius)
-            ability_right_effect = min(len(self.monsters) - 1, monster_index + ability_radius) + 1
-            monsters_to_attack = self.monsters[ability_left_effect:ability_right_effect]
+            self.player.add_effects(ability.effects)
+        self.player.apply_effects()
+        if isinstance(ability, DamageAbility):
+            monsters_to_attack = self._monsters_affected_by_ability_radius(ability, monster_index)
 
             for monster_to_attack in monsters_to_attack:
                 if not monster_to_attack.is_dead:
                     total_damage = int(self.player.damage * ability.damage_multiplier)
                     self.player.inflict_damage(monster_to_attack, total_damage)
                     self.notify(FightEvent(FightEventType.USER_ACTION, self.player, [monster_to_attack]))
+
+        self.player.reduce_effects_cooldown()
+        self.player.reduce_abilities_cooldown()
         return True
 
+    def _monsters_affected_by_ability_radius(self, ability: DamageAbility, monster_index: int) -> List[Monster]:
+        ability_radius = ability.radius
+        ability_left_effect = max(0, monster_index - ability_radius)
+        ability_right_effect = min(len(self.monsters) - 1, monster_index + ability_radius) + 1
+        monsters_affected_by_ability_radius = self.monsters[ability_left_effect:ability_right_effect]
+        return monsters_affected_by_ability_radius
+
     def monsters_plays(self):
-        attackers = []
         for monster in self.monsters:
             if not monster.is_dead:
-                attackers.append(monster)
                 monster.inflict_damage(self.player, monster.damage)
                 self.notify(FightEvent(FightEventType.MONSTER_ACTION, monster, [self.player]))
