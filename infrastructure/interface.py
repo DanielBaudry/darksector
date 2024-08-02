@@ -12,27 +12,28 @@ from domain.resources import Resource, ResourceType
 lock = threading.Lock()
 
 def generate_resources(character):
-    while True:
-        # Generate resources
-        with lock:
-            for building in character.buildings:
-                for resource in building.generation:
-                    character.add_resource_amount(resource)
-            for resource in character.generation:
-                character.add_resource_amount(resource)
+    for building in character.buildings:
+        for resource in building.generation:
+            character.add_resource_amount(resource)
+    for resource in character.generation:
+        character.add_resource_amount(resource)
 
-        # Wait for a minute
-        time.sleep(5)
 
 def consume_resources(character):
-    while True:
-        # Consume resources
-        with lock:
-            for consumption in character.consumptions:
-                character.remove_resource_amount(consumption)
+    for consumption in character.consumptions:
+        character.remove_resource_amount(consumption)
 
-        # Wait for a minute
-        time.sleep(5)
+
+
+def compute_resources(character):
+    while True:
+        with lock:
+            generate_resources(character)
+            consume_resources(character)
+
+            # Wait for a minute
+            time.sleep(5)
+
 
 def main():
     hutte = Building(
@@ -101,13 +102,8 @@ def main():
 
     scavenge_action = ScavengeAction()
     
-    # Create threads for resource generation and consumption
-    generate_thread = threading.Thread(target=generate_resources, args=(character,))
-    consume_thread = threading.Thread(target=consume_resources, args=(character,))
-
-    # Start the threads
-    generate_thread.start()
-    consume_thread.start()
+    compute_resources_thread = threading.Thread(target=compute_resources, args=(character,))
+    compute_resources_thread.start()
 
     while True:
         # Player input
@@ -123,11 +119,13 @@ def main():
             print("Trading actions")
         else:
             print("Invalid action")
-
+    
         print("---")
         for res in character.resources:
             print(res.type.name, res.amount)
         print("---")
+
+
 
 if __name__ == "__main__":
     main()

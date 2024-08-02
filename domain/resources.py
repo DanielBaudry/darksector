@@ -17,4 +17,4 @@ class Resource:
         self.amount = amount
 
     def __str__(self) -> str:
-        return f"{self.amount} {self.type.name}"
+        return f"{self.type.name}: {self.amount}"
