@@ -18,3 +18,15 @@ class Resource:
 
     def __str__(self) -> str:
         return f"{self.type.name}: {self.amount}"
+
+    def __add__(self, other: "Resource") -> "Resource":
+        if self.type == other.type:
+            return Resource(self.type, self.amount + other.amount)
+        else:
+            raise ValueError(f"Cannot add resources of different types: {self.type} and {other.type}")
+
+    def __sub__(self, other: "Resource") -> "Resource":
+        if self.type == other.type:
+            return Resource(self.type, max(0, self.amount - other.amount))
+        else:
+            raise ValueError(f"Cannot subtract resources of different types: {self.type} and {other.type}")

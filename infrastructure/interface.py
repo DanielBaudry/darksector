@@ -4,6 +4,7 @@ import threading
 from domain.action import ScavengeAction
 from domain.buildings import Building
 from domain.character import Character
+from domain.charcater_region import CharacterRegion
 from domain.drop_table import DropRate, DropTable
 from domain.region import Region
 from domain.resources import Resource, ResourceType
@@ -12,7 +13,7 @@ from domain.resources import Resource, ResourceType
 lock = threading.Lock()
 
 def generate_resources(character):
-    for building in character.buildings:
+    for building in character.current_region.buildings:
         for resource in building.generation:
             character.add_resource_amount(resource)
     for resource in character.generation:
@@ -22,7 +23,6 @@ def generate_resources(character):
 def consume_resources(character):
     for consumption in character.consumptions:
         character.remove_resource_amount(consumption)
-
 
 
 def compute_resources(character):
@@ -53,26 +53,6 @@ def main():
         generation=[],
     )
 
-    character = Character(
-        name="Dan",
-        consumptions=[Resource(ResourceType.FOOD, 1),
-                      Resource(ResourceType.WATER, 1)],
-        generation=[Resource(ResourceType.ENERGY, 40)],
-        resources=[
-            Resource(ResourceType.FOOD, 10),
-            Resource(ResourceType.WATER, 10),
-            Resource(ResourceType.IRON, 10),
-            Resource(ResourceType.DIAMONDS, 0),
-            Resource(ResourceType.GOLD, 0),
-            Resource(ResourceType.CARBON, 0),
-            Resource(ResourceType.FUEL, 0),
-            Resource(ResourceType.ENERGY, 100)
-        ],
-        buildings=[
-            hutte
-        ]
-    )
-
     region_1 = Region(
         name="Region 1",
         resources_probabilities=[
@@ -98,6 +78,31 @@ def main():
                 ]
             )
         ]
+    )
+
+    character_region = CharacterRegion(
+        region_1,
+        buildings=[
+            hutte
+        ]
+    )
+
+    character = Character(
+        name="Dan",
+        consumptions=[Resource(ResourceType.FOOD, 1),
+                      Resource(ResourceType.WATER, 1)],
+        generation=[Resource(ResourceType.ENERGY, 40)],
+        resources=[
+            Resource(ResourceType.FOOD, 10),
+            Resource(ResourceType.WATER, 10),
+            Resource(ResourceType.IRON, 10),
+            Resource(ResourceType.DIAMONDS, 0),
+            Resource(ResourceType.GOLD, 0),
+            Resource(ResourceType.CARBON, 0),
+            Resource(ResourceType.FUEL, 0),
+            Resource(ResourceType.ENERGY, 100)
+        ],
+        current_region=character_region,
     )
 
     scavenge_action = ScavengeAction()
