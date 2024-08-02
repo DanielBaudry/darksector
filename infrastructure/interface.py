@@ -1,8 +1,11 @@
 import time
 import threading
 
+from domain.action import ScavengeAction
 from domain.buildings import Building
 from domain.character import Character
+from domain.drop_table import DropRate, DropTable
+from domain.region import Region
 from domain.resources import Resource, ResourceType
 
 # Create a lock
@@ -68,6 +71,35 @@ def main():
             hutte
         ]
     )
+
+    region_1 = Region(
+        name="Region 1",
+        resources_probabilities=[
+            DropTable(
+                resource_type=ResourceType.FOOD,
+                drop_rates=[
+                    DropRate(probability=50, min_amount=1, max_amount=2),
+                    DropRate(probability=50, min_amount=3, max_amount=5)
+                ]
+            ),
+            DropTable(
+                resource_type=ResourceType.WATER,
+                drop_rates=[
+                    DropRate(probability=50, min_amount=1, max_amount=2),
+                    DropRate(probability=50, min_amount=3, max_amount=5)
+                ]
+            ),
+            DropTable(
+                resource_type=ResourceType.GOLD,
+                drop_rates=[
+                    DropRate(probability=2, min_amount=1, max_amount=2),
+                    DropRate(probability=4, min_amount=3, max_amount=5)
+                ]
+            )
+        ]
+    )
+
+    scavenge_action = ScavengeAction()
     
     # Create threads for resource generation and consumption
     generate_thread = threading.Thread(target=generate_resources, args=(character,))
@@ -84,9 +116,8 @@ def main():
         if action == "build":
             # Handle building actions
             print("Building actions")
-        elif action == "gather":
-            # Handle gathering actions
-            print("Gathering actions")
+        elif action == "scavenge" or action == "s":
+            scavenge_action.execute(character, region_1)
         elif action == "trade":
             # Handle trading actions
             print("Trading actions")
