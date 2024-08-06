@@ -3,8 +3,8 @@ import threading
 
 from domain.action import ScavengeAction
 from domain.buildings import Building
-from domain.character import Character
-from domain.charcater_region import CharacterRegion
+from domain.character import PlayerCharacter
+from domain.character_region import CharacterRegion
 from domain.drop_table import DropRate, DropTable
 from domain.region import Region
 from domain.resources import Resource, ResourceType
@@ -87,7 +87,7 @@ def main():
         ]
     )
 
-    character = Character(
+    character = PlayerCharacter(
         name="Dan",
         consumptions=[Resource(ResourceType.FOOD, 1),
                       Resource(ResourceType.WATER, 1)],
