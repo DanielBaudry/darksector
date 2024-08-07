@@ -1,3 +1,4 @@
+from typing import Optional
 from domain.base_character import BaseCharacter
 from domain.resources import Resource, ResourceType
 
@@ -6,8 +7,8 @@ class PlayerCharacter(BaseCharacter):
     consumptions: list[Resource]
     generation: list[Resource]
 
-    def __init__(self, name: str, consumptions: list[Resource], generation: list[Resource], resources: list[Resource], current_region: "Region") -> None:
-        super().__init__(name, resources, current_region)
+    def __init__(self, name: str, consumptions: list[Resource], generation: list[Resource], resources: list[Resource], current_region: Optional["Region"] = None,  cities: Optional[list["City"]] = None) -> None:
+        super().__init__(name, resources, current_region, cities)
         self.consumptions = consumptions
         self.generation = generation
         self.resource_capacities = [

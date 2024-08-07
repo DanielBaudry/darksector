@@ -12,11 +12,13 @@ class CreateNewBuildingInRegion:
             return
     
         for cost in building.construction_costs:
-            if character.get_resource_capacity(cost.type).amount < cost.amount:
+            if character.get_resource(cost.type).amount < cost.amount:
                 # TODO: raise exception or handle this case
                 return
 
         for cost in building.construction_costs:
+            print(f"Removing {cost.amount} {cost.type} to {character.name}")
+            print(f"Character's resources: {character.get_resource(cost.type).amount}")
             character.remove_resource_amount(cost)
 
         city_in_region = None
