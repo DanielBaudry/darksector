@@ -1,14 +1,14 @@
 from domain.resources import Resource, ResourceType
 
 
-class Building:
+class BuildingTemplate:
     name: str
     construction_time: int
     construction_costs: list[Resource]
     generation: list[Resource]
     resource_capacities: list[Resource]
 
-    def __init__(self, name: str, construction_time: int, construction_costs: list[Resource], resource_capacities: list[Resource], generation: list[Resource]):
+    def __init__(self, name: str, construction_time: int, construction_costs: list[Resource], resource_capacities: list[Resource], generation: list[Resource]) -> None:
         self.name = name
         self.construction_time = construction_time
         self.construction_costs = construction_costs

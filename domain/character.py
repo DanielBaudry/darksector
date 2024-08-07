@@ -1,5 +1,4 @@
 from domain.base_character import BaseCharacter
-from domain.character_region import CharacterRegion
 from domain.resources import Resource, ResourceType
 
 
@@ -7,7 +6,7 @@ class PlayerCharacter(BaseCharacter):
     consumptions: list[Resource]
     generation: list[Resource]
 
-    def __init__(self, name: str, consumptions: list[Resource], generation: list[Resource], resources: list[Resource], current_region: CharacterRegion) -> None:
+    def __init__(self, name: str, consumptions: list[Resource], generation: list[Resource], resources: list[Resource], current_region: "Region") -> None:
         super().__init__(name, resources, current_region)
         self.consumptions = consumptions
         self.generation = generation
@@ -24,7 +23,7 @@ class PlayerCharacter(BaseCharacter):
 
     def resource_capacity(self, resource_type: ResourceType) -> int:
         Character_resource_capacity = self.get_resource_capacity(resource_type)
-        building_resource_capacity = self.current_region.get_resource_capacity(resource_type)
+        building_resource_capacity = self.current_region.get_resource_capacity(self, resource_type)
         return building_resource_capacity + Character_resource_capacity
     
     def get_resource_capacity(self, resource_type: ResourceType) -> Resource:

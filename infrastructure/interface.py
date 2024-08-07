@@ -2,20 +2,22 @@ import time
 import threading
 
 from domain.action import ScavengeAction
-from domain.buildings import Building
+from domain.building import BuildingTemplate
 from domain.character import PlayerCharacter
-from domain.character_region import CharacterRegion
+from domain.city import City
 from domain.drop_table import DropRate, DropTable
 from domain.region import Region
 from domain.resources import Resource, ResourceType
+from use_cases.create_new_building_in_region import CreateNewBuildingInRegion
 
 # Create a lock
 lock = threading.Lock()
 
 def generate_resources(character):
-    for building in character.current_region.buildings:
-        for resource in building.generation:
-            character.add_resource_amount(resource)
+    for city in character.cities:
+        for building in city.buildings:
+            for resource in building.generation:
+                character.add_resource_amount(resource)
     for resource in character.generation:
         character.add_resource_amount(resource)
 
@@ -36,23 +38,6 @@ def compute_resources(character):
 
 
 def main():
-    hutte = Building(
-        name="hutte",
-        construction_time=10,
-        construction_costs=[],
-        resource_capacities=[
-            Resource(ResourceType.FOOD, 50),
-            Resource(ResourceType.WATER, 50),
-            Resource(ResourceType.IRON, 50),
-            Resource(ResourceType.DIAMONDS, 10),
-            Resource(ResourceType.GOLD, 10),
-            Resource(ResourceType.CARBON, 0),
-            Resource(ResourceType.FUEL, 0),
-            Resource(ResourceType.ENERGY, 0)
-        ],
-        generation=[],
-    )
-
     region_1 = Region(
         name="Region 1",
         resources_probabilities=[
@@ -80,13 +65,6 @@ def main():
         ]
     )
 
-    character_region = CharacterRegion(
-        region_1,
-        buildings=[
-            hutte
-        ]
-    )
-
     character = PlayerCharacter(
         name="Dan",
         consumptions=[Resource(ResourceType.FOOD, 1),
@@ -102,7 +80,30 @@ def main():
             Resource(ResourceType.FUEL, 0),
             Resource(ResourceType.ENERGY, 100)
         ],
-        current_region=character_region,
+        current_region=region_1,
+    )
+
+    hutte = BuildingTemplate(
+        name="hutte",
+        construction_time=10,
+        construction_costs=[],
+        resource_capacities=[
+            Resource(ResourceType.FOOD, 50),
+            Resource(ResourceType.WATER, 50),
+            Resource(ResourceType.IRON, 50),
+            Resource(ResourceType.DIAMONDS, 10),
+            Resource(ResourceType.GOLD, 10),
+            Resource(ResourceType.CARBON, 0),
+            Resource(ResourceType.FUEL, 0),
+            Resource(ResourceType.ENERGY, 0)
+        ],
+        generation=[],
+    )
+
+    CreateNewBuildingInRegion().execute(
+        region=region_1,
+        character=character,
+        building=hutte,
     )
 
     scavenge_action = ScavengeAction()
@@ -112,16 +113,19 @@ def main():
 
     while True:
         # Player input
-        action = input("Enter an action (e.g., 'build', 'gather', 'trade'): ")
+        action = input("Enter an action (e.g., 'build', 'scavenge', 'show'): ")
 
         if action == "build":
             # Handle building actions
             print("Building actions")
         elif action == "scavenge" or action == "s":
             scavenge_action.execute(character, region_1)
-        elif action == "trade":
-            # Handle trading actions
-            print("Trading actions")
+        elif action == "show":
+            print("Player:", character.name)
+            for city in character.cities:
+                print(city.name)
+                for building in city.buildings:
+                    print(building.name)
         else:
             print("Invalid action")
     
