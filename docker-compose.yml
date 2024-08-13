@@ -1,0 +1,33 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app
+    ports:
+      - 8000:8000
+
+  frontend:
+    build:
+      context: ./frontend/darksector
+      dockerfile: Dockerfile
+    command: npm run dev
+    volumes:
+      - ./frontend/darksector:/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+
+  nginx:
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    ports:
+      - 80:80
+    depends_on:
+      - backend
+      - frontend

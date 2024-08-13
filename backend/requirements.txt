@@ -2,3 +2,4 @@ pytest
 black
 click
 django
+django-cors-headers

@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-interface DataItem {
-    id: number;
-    name: string;
-}
 
 const MyComponent = () => {
-  const [data, setData] = useState<DataItem[]>([]);
+  const [data, setData] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api/data');
-        setData(response.data);
+        console.log('Fetching data from API...');
+        const response = await axios.get('http://localhost:8000/player');
+        console.log('Received data:', response.data);
+        setData(response.data['name']);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -24,9 +22,10 @@ const MyComponent = () => {
 
   return (
     <div>
-      {data.map((item) => (
-        <div key={item.id}>{item.name}</div>
-      ))}
+        <h1>My Component</h1>
+        <div>
+            Hello {data} !
+        </div>
     </div>
   );
 };
