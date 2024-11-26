@@ -12,6 +12,11 @@ class Action(ABC):
     def execute(self, character: PlayerCharacter, *args, **kwargs):
         pass
 
+    def compute_energy_cost(self, character: PlayerCharacter) -> Resource:
+        # TODO: energy cost can vary based on character's researches or skills
+        return Resource(ResourceType.ENERGY, self.base_energy_cost)
+
+
 class ScavengeAction(Action):
     def __init__(self) -> None:
         self.name = "Scavenge"
@@ -28,9 +33,5 @@ class ScavengeAction(Action):
         # add resources to character's inventory
         for res in generated_resources:
             character.add_resource_amount(res)
-        
-        character.remove_resource_amount(self.compute_energy_cost(character))
 
-    def compute_energy_cost(self, character: PlayerCharacter) -> Resource:
-        # TODO: energy cost can vary based on character's researches or skills
-        return Resource(ResourceType.ENERGY, self.base_energy_cost)
+        character.remove_resource_amount(self.compute_energy_cost(character))
